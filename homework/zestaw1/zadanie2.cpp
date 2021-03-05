@@ -1,3 +1,6 @@
+// link do repozytorium
+// https://github.com/tangens90/p2
+
 #include <iostream>
 
 using namespace std;
