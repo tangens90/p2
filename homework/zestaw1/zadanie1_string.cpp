@@ -13,10 +13,8 @@ int main() {
 		nazwiska[i] = tmp;
 	}
 
-	cout << endl;
-
 	for (int i = 0; i < n; i++) {
-		cout << nazwiska[i] << endl;
+		cout << nazwiska[i] << " " << nazwiska[i].size() << endl;
 	}
 
 	delete[] nazwiska;
