@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 using namespace std;
@@ -10,14 +11,28 @@ using namespace std;
 int main() {
 	int n;
 	cin >> n;
-	const char** nazwiska = new const char*[n];
+
+	// instrukcja ponizej przechwyci znak nowej linii wstawiany
+	// zawsze po wprowadzeniu liczby n. ten znak jest nam zbędny
+	// (i powoduje błędne działanie programu)
+	fgetc(stdin);
+
+	char** nazwiska = (char**)malloc(n * sizeof(char*));
 
 	for (int i = 0; i < n; i++) {
 		char* tmp;
-		// %ms powoduje sparsowanie napisu i alokacje takiej
-		// ilości pamięci, żeby zmieścić podany napis, znak
-		// \0 i nic więcej.
-		scanf("%ms", &tmp);
+		char c;
+		size_t lenght = 0; // ilość znaków zapisanych w tmp
+		size_t size = 2;   // obecny rozmiar tmp
+		tmp = (char*)malloc(sizeof(*tmp) * size);
+		while ((c = fgetc(stdin)) != EOF && c != '\n') {
+			tmp[lenght++] = c;
+			if (size == lenght) {
+				tmp = (char*)realloc(tmp, sizeof(*tmp) * (size += 4));
+			}
+		}
+		tmp[lenght++] = '\0';
+		tmp = (char*)realloc(tmp, sizeof(*tmp) * lenght);
 		nazwiska[i] = tmp;
 	}
 
@@ -25,10 +40,9 @@ int main() {
 		cout << nazwiska[i] << " " << strlen(nazwiska[i]) << endl;
 	}
 
-
 	for (int i = 0; i < n; i++) {
-		delete[] nazwiska[i];
+		free(nazwiska[i]);
 	}
 
-	delete[] nazwiska;
+	free(nazwiska);
 }
