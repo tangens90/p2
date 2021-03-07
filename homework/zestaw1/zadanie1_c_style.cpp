@@ -22,17 +22,17 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		char* tmp;
 		char c;
-		size_t lenght = 0; // ilość znaków zapisanych w tmp
+		size_t length = 0; // ilość znaków zapisanych w tmp
 		size_t size = 2;   // obecny rozmiar tmp
 		tmp = (char*)malloc(sizeof(*tmp) * size);
 		while ((c = fgetc(stdin)) != EOF && c != '\n') {
-			tmp[lenght++] = c;
-			if (size == lenght) {
+			tmp[length++] = c;
+			if (size == length) {
 				tmp = (char*)realloc(tmp, sizeof(*tmp) * (size += 4));
 			}
 		}
-		tmp[lenght++] = '\0';
-		tmp = (char*)realloc(tmp, sizeof(*tmp) * lenght);
+		tmp[length++] = '\0';
+		tmp = (char*)realloc(tmp, sizeof(*tmp) * length);
 		nazwiska[i] = tmp;
 	}
 
