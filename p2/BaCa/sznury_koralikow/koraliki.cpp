@@ -2,7 +2,20 @@
 
 #include <iostream>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::cin;
+
+struct Koralik {
+	int id;
+
+	Koralik() {}
+
+	void print() {
+		// TODO wypisywanie wiązań
+		cout << id << endl;
+	}
+};
 
 struct IdSznura {
 	char ch1, ch2, ch3;
@@ -15,20 +28,18 @@ struct IdSznura {
 		ch3 = *(id + 2);
 	}
 
+	int compare(IdSznura id) {
+		if (id.ch1 == ch1 &&
+			id.ch2 == ch2 &&
+			id.ch3 == ch3)
+			return 0;
+
+		return -1;
+	}
+
 	void print() {
 		cout << ch1 << ch2 << ch3;
 	}
-};
-
-struct Sznur {
-	IdSznura id;
-
- 	Sznur() {}
- 	Sznur(IdSznura cid) {
- 		id.ch1 = cid.ch1; 
- 		id.ch2 = cid.ch2; 
- 		id.ch3 = cid.ch3; 
- 	}
 };
 
 template <typename T>
@@ -39,7 +50,7 @@ struct Node {
 //	Node() : data(NULL), next(NULL) {}
 
 	void print() {
-		data.id.print();
+		data.print();
 	}
 };
 
@@ -49,6 +60,7 @@ struct List {
 
 	List<T>() : head(NULL) {}
 
+	// TODO dodawanie ma uwzględniać kolejność sznurów
 	void push(T data) {
 		if (head == NULL) {
 			head = new Node<T>();
@@ -68,15 +80,45 @@ struct List {
 		}
 	}
 
+	Node<T>* findSznurById(IdSznura id) {
+		Node<T>* curr = head;
+		while (curr != NULL) {
+			if (curr->data.id.compare(id) == 0) {
+				return curr;
+			}
+			curr = curr->next;	
+		}
+		cout << "Nie ma sznura o podanym id!" << endl;
+		return NULL;
+	}
+
 	void print() {
 		Node<T>* node = head;
 		while (node != NULL) {
 			node->print();
-			cout << endl;
 			node = node->next;
 		}
 	}
 };
+
+struct Sznur {
+	IdSznura id;
+	List<Koralik> koraliki;
+
+ 	Sznur() {}
+ 	Sznur(IdSznura cid) {
+ 		id.ch1 = cid.ch1; 
+ 		id.ch2 = cid.ch2; 
+ 		id.ch3 = cid.ch3; 
+ 	}
+
+	void print() {
+		id.print();
+		cout << endl;
+		koraliki.print();
+	}
+};
+
 
 int main() {
 	char op;
@@ -85,17 +127,29 @@ int main() {
 	List<Sznur> sznury;
 	// TODO czy niezerowanie elementów poniżej nie powoduje
 	// błędów ze wskaźnikami do dowiązań
-	Sznur s;
-	IdSznura sn;
 
 	while (true) {
 		cin >> op;
+		Sznur s;
+		IdSznura sn;
+		int kr;
+		Node<Sznur>* tmp_s;
+		Koralik k;
 
 		switch (op) {
 			case 'S':
 				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
 				s.id = sn;
 				sznury.push(s);	
+				break;
+			case 'B':
+				cin >> kr;
+				k.id = kr;
+				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
+				tmp_s = sznury.findSznurById(sn);
+				tmp_s->data.koraliki.push(k);
+//				tmp_s->data.koraliki.head->data.print();
+//				tmp_s->data.id.print();
 				break;
 			case 'P':
 				sznury.print();
