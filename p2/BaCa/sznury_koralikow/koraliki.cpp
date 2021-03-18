@@ -70,6 +70,31 @@ struct List {
 		}
 	}
 
+	void pop(T data) {
+		Node<T>* curr = head;
+		if (curr->data == data) {
+			// delete head node
+			Node<T>* tmp = head;
+			head = head->next;
+			delete tmp;
+		}
+		else {
+			while (curr->next->data != data) {
+				curr = curr->next;
+				if (curr->next == NULL)
+					break;
+			}
+
+			if (curr->next == NULL)
+				cout << "Nie ma Node do usunięcia o podanym wskaźniku!" << endl;
+			else {
+				Node<T>* tmp = curr->next;
+				curr->next = tmp->next;
+				delete tmp;
+			}
+		}
+	}
+
 	Node<T>* findSznurById(IdSznura id) {
 		Node<T>* curr = head;
 		while (curr != NULL) {
@@ -124,6 +149,11 @@ struct Koralik {
 	void linkMeTo(Koralik* k) {
 		out.push(k);
 		k->in.push(this);
+	}
+
+	void unLinkMeTo(Koralik* k) {
+		out.pop(k);
+		k->in.pop(this);
 	}
 
 	void print() {
@@ -190,6 +220,11 @@ int main() {
 			case 'L':
 				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
 				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.linkMeTo(
+					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
+				break;
+			case 'U':
+				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
+				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.unLinkMeTo(
 					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
 				break;
 			case 'P':
