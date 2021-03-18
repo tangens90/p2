@@ -6,16 +6,6 @@ using std::cout;
 using std::endl;
 using std::cin;
 
-struct Koralik {
-	int id;
-
-	Koralik() {}
-
-	void print() {
-		// TODO wypisywanie wiązań
-		cout << id << endl;
-	}
-};
 
 struct IdSznura {
 	char ch1, ch2, ch3;
@@ -92,12 +82,57 @@ struct List {
 		return NULL;
 	}
 
+	Node<T>* findKoralikById(int id) {
+		Node<T>* curr = head;
+		while (curr != NULL) {
+			if (curr->data.id == id) {
+				return curr;
+			}
+			curr = curr->next;	
+		}
+		cout << "Nie ma koralika o podanym id!" << endl;
+		return NULL;
+	}
+
 	void print() {
 		Node<T>* node = head;
 		while (node != NULL) {
 			node->print();
 			node = node->next;
 		}
+	}
+	
+	void printWiazania() {
+		Node<T>* node = head;
+		while (node != NULL) {
+			cout << " "; 
+			(*(node->data)).ojciec.print(); 
+			cout << " " << (*(node->data)).id;
+			node = node->next;
+		}
+	}
+};
+
+struct Koralik {
+	int id;
+	// TODO aktualizowac ojca po zmianie sznura
+	IdSznura ojciec;
+	List<Koralik*> in, out;
+
+	Koralik() {}
+
+	void linkMeTo(Koralik* k) {
+		out.push(k);
+		k->in.push(this);
+	}
+
+	void print() {
+		// TODO wypisywanie wiązań
+		// TODO czy ta spacja nie jest problemem jeśli
+		// nie ma żadnych wiązań?
+		cout << id;
+		out.printWiazania();
+		cout << endl;
 	}
 };
 
@@ -119,7 +154,6 @@ struct Sznur {
 	}
 };
 
-
 int main() {
 	char op;
 	bool end = false;
@@ -131,9 +165,10 @@ int main() {
 	while (true) {
 		cin >> op;
 		Sznur s;
-		IdSznura sn;
-		int kr;
+		IdSznura sn, sS, dS;
+		int kr, sK, dK;
 		Node<Sznur>* tmp_s;
+//		Node<Koralik>* tmp_k;
 		Koralik k;
 
 		switch (op) {
@@ -146,10 +181,16 @@ int main() {
 				cin >> kr;
 				k.id = kr;
 				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
+				k.ojciec = sn;
 				tmp_s = sznury.findSznurById(sn);
 				tmp_s->data.koraliki.push(k);
 //				tmp_s->data.koraliki.head->data.print();
 //				tmp_s->data.id.print();
+				break;
+			case 'L':
+				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
+				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.linkMeTo(
+					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
 				break;
 			case 'P':
 				sznury.print();
