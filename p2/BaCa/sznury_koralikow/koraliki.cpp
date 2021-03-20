@@ -54,17 +54,11 @@ struct Wiazanie {
 	int doKoralika;
 
 	bool operator==(const Wiazanie w) {
-		bool s = this->sznur.ch1 == w.sznur.ch1 &&
-			this->sznur.ch2 == w.sznur.ch2 &&
-			this->sznur.ch3 == w.sznur.ch3;
-		return s && this->doKoralika == w.doKoralika;
+		return this->sznur == w.sznur && this->doKoralika == w.doKoralika;
 	}
 	
 	bool operator!=(const Wiazanie w) {
-		bool s = this->sznur.ch1 != w.sznur.ch1 || 
-			this->sznur.ch2 != w.sznur.ch2 ||
-			this->sznur.ch3 != w.sznur.ch3;
-		return s && this->doKoralika != w.doKoralika;
+		return sznur != w.sznur || this->doKoralika != w.doKoralika;
 	}
 
 	bool operator<(const Wiazanie w) {
@@ -72,6 +66,12 @@ struct Wiazanie {
 			return sznur < w.sznur;
 
 		return doKoralika < w.doKoralika;
+	}
+
+	// TODO remove me
+	void print() {
+		sznur.print();
+		cout << doKoralika << endl;
 	}
 };
 
@@ -112,6 +112,7 @@ struct List {
 				head = n;
 				return;
 			}
+			else if (data == curr->data) return;
 			while (curr->next != NULL) {
 				if (data < curr->next->data) {
 					Node<T>* n = new Node<T>();
@@ -121,6 +122,7 @@ struct List {
 					n->next = tmp;
 					return;
 				}
+				else if (data == curr->next->data) return;
 				curr = curr->next;	
 			}
 			// curr is the tail of the list
@@ -131,27 +133,35 @@ struct List {
 		}
 	}
 
-	void pop(T data) {
+	bool pop(T data) {
 		Node<T>* curr = head;
+		if (curr == NULL)	return false;
 		if (curr->data == data) {
 			// delete head node
 			Node<T>* tmp = head;
 			head = head->next;
 			delete tmp;
+			return true;
 		}
 		else {
-			while (curr->next->data != data) {
+			while (curr->next != NULL && curr->next->data != data) {
 				curr = curr->next;
+				// TODO bez tego ifa niżej
 				if (curr->next == NULL)
 					break;
 			}
 
-			if (curr->next == NULL)
-				cout << "Nie ma Node do usunięcia o podanym wskaźniku!" << endl;
+			// TODO bez tego chyba
+			if (curr->next == NULL) {
+				return false;
+				//cout << "Nie ma Node do usunięcia o podanym wskaźniku!" << endl;
+			}
+
 			else {
 				Node<T>* tmp = curr->next;
 				curr->next = tmp->next;
 				delete tmp;
+				return true;
 			}
 		}
 	}
@@ -179,7 +189,7 @@ struct List {
 			}
 			curr = curr->next;	
 		}
-		cout << "Nie ma sznura o podanym id!" << endl;
+//		cout << "Nie ma sznura o podanym id!" << endl;
 		return NULL;
 	}
 
@@ -191,7 +201,7 @@ struct List {
 			}
 			curr = curr->next;	
 		}
-		cout << "Nie ma koralika o podanym id!" << endl;
+//		cout << "Nie ma koralika o podanym id!" << endl;
 		return NULL;
 	}
 
@@ -235,17 +245,17 @@ struct Koralik {
 		return this->id < k.id;
 	}
 
-	void linkMeTo(Koralik* k) {
+	void linkMeTo(IdSznura sznur, int koralik) {
 		Wiazanie w;
-		w.sznur = k->ojciec;
-		w.doKoralika = k->id;
+		w.sznur = sznur;
+		w.doKoralika = koralik;
 		out.push(w);
 	}
 
-	void unLinkMeTo(Koralik* k) {
+	void unLinkMeTo(IdSznura sznur, int koralik) {
 		Wiazanie w;
-		w.sznur = k->ojciec;
-		w.doKoralika = k->id;
+		w.sznur = sznur;
+		w.doKoralika = koralik;
 		out.pop(w);
 	}
 
@@ -272,6 +282,10 @@ struct Sznur {
 
 	bool operator<(const Sznur s) {
 		return id < s.id;
+	}
+
+	bool operator==(const Sznur s) {
+		return id == s.id;
 	}
 
 	void print() {
@@ -330,25 +344,41 @@ int main() {
 				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
 				k.ojciec = sn;
 				tmp_s = sznury.findSznurById(sn);
+				// TODO może więcej trzeba takich sprawdzeń o nullach
+				if (tmp_s == NULL) break;
 				tmp_s->data.koraliki.push(k);
 //				tmp_s->data.koraliki.head->data.print();
 //				tmp_s->data.id.print();
 				break;
 			case 'L':
 				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
+				if (sznury.findSznurById(sS) != NULL &&
+					sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK) != NULL)
+					//&& sznury.findSznurById(dS) != NULL &&
+					//sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK) != NULL)
+
 				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.linkMeTo(
-					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
+					dS, dK);
+					//&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
 				break;
 			case 'U':
 				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
+				if (sznury.findSznurById(sS) != NULL &&
+					sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK) != NULL)
+					//&& sznury.findSznurById(dS) != NULL &&
+					//sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK) != NULL)
 				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.unLinkMeTo(
-					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
+					dS, dK);
+					//&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
 				break;
 			case 'D':
 				cin >> kr;
 				k.id = kr;
 				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
 				popWiazania(&sznury, kr, sn);
+				if (sznury.findSznurById(sn) != NULL && 
+					sznury.findSznurById(sn)->data.koraliki.findKoralikById(k.id) != NULL)
+
 				sznury.findSznurById(sn)->data.koraliki.pop(
 					sznury.findSznurById(sn)->data.koraliki.findKoralikById(k.id)->data);
 				break;
