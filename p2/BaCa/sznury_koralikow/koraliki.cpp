@@ -28,13 +28,20 @@ struct IdSznura {
 			this->ch3 == s.ch3;
 	}
 
-	int compare(IdSznura id) {
-		if (id.ch1 == ch1 &&
-			id.ch2 == ch2 &&
-			id.ch3 == ch3)
-			return 0;
+	bool operator!=(const IdSznura s) {
+		return ch1 != s.ch1 ||
+			   ch2 != s.ch2 ||
+			   ch3 != s.ch3;
+	}
 
-		return -1;
+	bool operator<(const IdSznura s) {
+		if (ch1 != s.ch1)
+			return ch1 < s.ch1;
+
+		if (ch2 != s.ch2)
+			return ch2 < s.ch2;
+
+		return ch3 < s.ch3;
 	}
 
 	void print() {
@@ -59,6 +66,13 @@ struct Wiazanie {
 			this->sznur.ch3 != w.sznur.ch3;
 		return s && this->doKoralika != w.doKoralika;
 	}
+
+	bool operator<(const Wiazanie w) {
+		if (sznur != w.sznur)
+			return sznur < w.sznur;
+
+		return doKoralika < w.doKoralika;
+	}
 };
 
 
@@ -81,6 +95,8 @@ struct List {
 	List<T>() : head(NULL) {}
 
 	// TODO dodawanie ma uwzględniać kolejność sznurów
+	// TODO nie zezwalać na duplikaty!
+	// TODO czy działa porządek dla koralików jeśli sznur1 < sznur2 && koralik1 < koralik2
 	void push(T data) {
 		if (head == NULL) {
 			head = new Node<T>();
@@ -89,7 +105,22 @@ struct List {
 		}
 		else {
 			Node<T>* curr = head;
+			if (data < curr->data) {
+				Node<T>* n = new Node<T>();
+				n->data = data;
+				n->next = head;
+				head = n;
+				return;
+			}
 			while (curr->next != NULL) {
+				if (data < curr->next->data) {
+					Node<T>* n = new Node<T>();
+					n->data = data;
+					Node<T>* tmp = curr->next;
+					curr->next = n;
+					n->next = tmp;
+					return;
+				}
 				curr = curr->next;	
 			}
 			// curr is the tail of the list
@@ -143,7 +174,7 @@ struct List {
 	Node<T>* findSznurById(IdSznura id) {
 		Node<T>* curr = head;
 		while (curr != NULL) {
-			if (curr->data.id.compare(id) == 0) {
+			if (curr->data.id == id) { 
 				return curr;
 			}
 			curr = curr->next;	
@@ -200,6 +231,10 @@ struct Koralik {
 		return this->id != k.id;
 	}
 
+	bool operator<(const Koralik k) {
+		return this->id < k.id;
+	}
+
 	void linkMeTo(Koralik* k) {
 		Wiazanie w;
 		w.sznur = k->ojciec;
@@ -234,6 +269,10 @@ struct Sznur {
  		id.ch2 = cid.ch2; 
  		id.ch3 = cid.ch3; 
  	}
+
+	bool operator<(const Sznur s) {
+		return id < s.id;
+	}
 
 	void print() {
 		id.print();
