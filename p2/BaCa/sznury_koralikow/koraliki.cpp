@@ -6,6 +6,10 @@ using std::cout;
 using std::endl;
 using std::cin;
 
+template <typename T> struct List;
+struct Sznur;
+struct Koralik;
+
 
 struct IdSznura {
 	char ch1, ch2, ch3;
@@ -16,6 +20,12 @@ struct IdSznura {
 		ch1 = *(id + 0);
 		ch2 = *(id + 1);
 		ch3 = *(id + 2);
+	}
+
+	bool operator==(const IdSznura s) {
+		return this->ch1 == s.ch1 &&
+			this->ch2 == s.ch2 &&
+			this->ch3 == s.ch3;
 	}
 
 	int compare(IdSznura id) {
@@ -31,6 +41,26 @@ struct IdSznura {
 		cout << ch1 << ch2 << ch3;
 	}
 };
+
+struct Wiazanie {
+	IdSznura sznur;
+	int doKoralika;
+
+	bool operator==(const Wiazanie w) {
+		bool s = this->sznur.ch1 == w.sznur.ch1 &&
+			this->sznur.ch2 == w.sznur.ch2 &&
+			this->sznur.ch3 == w.sznur.ch3;
+		return s && this->doKoralika == w.doKoralika;
+	}
+	
+	bool operator!=(const Wiazanie w) {
+		bool s = this->sznur.ch1 != w.sznur.ch1 || 
+			this->sznur.ch2 != w.sznur.ch2 ||
+			this->sznur.ch3 != w.sznur.ch3;
+		return s && this->doKoralika != w.doKoralika;
+	}
+};
+
 
 template <typename T>
 struct Node {
@@ -95,6 +125,21 @@ struct List {
 		}
 	}
 
+//	void popKoralik(List<Sznur>* sznury, T data) {
+//		Node<Sznur>* s = sznury->head;
+//		while (s != NULL) {
+//
+//			s = s->next;
+//		}
+//		Node<Wiazanie>* curr = data.out.head;
+//		while (curr != NULL) {
+//			cout << curr->data.doKoralika << endl;
+////			curr->data.sznur.print();
+//			curr = curr->next;
+//		}
+//		pop(data);
+//	}
+
 	Node<T>* findSznurById(IdSznura id) {
 		Node<T>* curr = head;
 		while (curr != NULL) {
@@ -131,8 +176,8 @@ struct List {
 		Node<T>* node = head;
 		while (node != NULL) {
 			cout << " "; 
-			(*(node->data)).ojciec.print(); 
-			cout << " " << (*(node->data)).id;
+			node->data.sznur.print();
+			cout << " " << node->data.doKoralika;
 			node = node->next;
 		}
 	}
@@ -141,19 +186,32 @@ struct List {
 struct Koralik {
 	int id;
 	// TODO aktualizowac ojca po zmianie sznura
+	// podobno jednak tego nie trzeba robić?
 	IdSznura ojciec;
-	List<Koralik*> in, out;
+	List<Wiazanie> out;
 
 	Koralik() {}
 
+	bool operator==(const Koralik k) {
+		return this->id == k.id;
+	}
+
+	bool operator!=(const Koralik k) {
+		return this->id != k.id;
+	}
+
 	void linkMeTo(Koralik* k) {
-		out.push(k);
-		k->in.push(this);
+		Wiazanie w;
+		w.sznur = k->ojciec;
+		w.doKoralika = k->id;
+		out.push(w);
 	}
 
 	void unLinkMeTo(Koralik* k) {
-		out.pop(k);
-		k->in.pop(this);
+		Wiazanie w;
+		w.sznur = k->ojciec;
+		w.doKoralika = k->id;
+		out.pop(w);
 	}
 
 	void print() {
@@ -183,6 +241,26 @@ struct Sznur {
 		koraliki.print();
 	}
 };
+
+void popWiazania(List<Sznur>* sznury, int kr, IdSznura sn) {
+	Node<Sznur>* curr = sznury->head;
+	while (curr != NULL) {
+		Node<Koralik>* k = curr->data.koraliki.head;
+		while (k != NULL) {
+			// TODO teraz patrzeć na wiązania!
+			Node<Wiazanie>* w = k->data.out.head;
+			while (w != NULL) {
+				if (w->data.doKoralika == kr && w->data.sznur == sn) {
+					k->data.out.pop(w->data);
+				}
+				w = w->next;
+			}
+			k = k->next;
+		}
+		curr = curr->next;
+	}
+}
+
 
 int main() {
 	char op;
@@ -226,6 +304,14 @@ int main() {
 				cin >> sK >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dK >> dS.ch1 >> dS.ch2 >> dS.ch3;
 				sznury.findSznurById(sS)->data.koraliki.findKoralikById(sK)->data.unLinkMeTo(
 					&sznury.findSznurById(dS)->data.koraliki.findKoralikById(dK)->data);
+				break;
+			case 'D':
+				cin >> kr;
+				k.id = kr;
+				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
+				popWiazania(&sznury, kr, sn);
+				sznury.findSznurById(sn)->data.koraliki.pop(
+					sznury.findSznurById(sn)->data.koraliki.findKoralikById(k.id)->data);
 				break;
 			case 'P':
 				sznury.print();
