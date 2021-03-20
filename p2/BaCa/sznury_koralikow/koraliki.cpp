@@ -205,6 +205,16 @@ struct List {
 		return NULL;
 	}
 
+	void clear(List<Sznur>* sznury) {
+		Node<T>* curr = head;
+		while (curr != NULL) {
+			Node<T>* tmp = curr->next;
+			popWiazania(sznury, curr->data.id, curr->data.ojciec);
+			pop(curr->data);
+			curr = tmp;
+		}
+	}
+
 	void print() {
 		Node<T>* node = head;
 		while (node != NULL) {
@@ -288,6 +298,10 @@ struct Sznur {
 		return id == s.id;
 	}
 
+	bool operator!=(const Sznur s) {
+		return id != s.id;
+	}
+
 	void print() {
 		id.print();
 		cout << endl;
@@ -300,7 +314,6 @@ void popWiazania(List<Sznur>* sznury, int kr, IdSznura sn) {
 	while (curr != NULL) {
 		Node<Koralik>* k = curr->data.koraliki.head;
 		while (k != NULL) {
-			// TODO teraz patrzeć na wiązania!
 			Node<Wiazanie>* w = k->data.out.head;
 			while (w != NULL) {
 				if (w->data.doKoralika == kr && w->data.sznur == sn) {
@@ -381,6 +394,11 @@ int main() {
 
 				sznury.findSznurById(sn)->data.koraliki.pop(
 					sznury.findSznurById(sn)->data.koraliki.findKoralikById(k.id)->data);
+				break;
+			case 'R':
+				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
+				sznury.findSznurById(sn)->data.koraliki.clear(&sznury);
+				sznury.pop(sznury.findSznurById(sn)->data);
 				break;
 			case 'P':
 				sznury.print();
