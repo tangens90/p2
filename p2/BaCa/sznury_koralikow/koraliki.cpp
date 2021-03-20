@@ -418,6 +418,12 @@ int main() {
 				sznury.print();
 				break;
 			case 'F':
+				Node<Sznur>* curr = sznury.head;
+				while (curr != NULL) {
+					curr->data.koraliki.clear(&sznury);
+					sznury.pop(curr->data);
+					curr = curr->next;
+				}
 				end = true;
 				break;
 		}
