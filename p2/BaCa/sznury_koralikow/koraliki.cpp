@@ -256,6 +256,7 @@ struct Koralik {
 	}
 
 	void linkMeTo(IdSznura sznur, int koralik) {
+
 		Wiazanie w;
 		w.sznur = sznur;
 		w.doKoralika = koralik;
@@ -342,7 +343,7 @@ int main() {
 		IdSznura sn, sS, dS;
 		int kr, sK, dK;
 		Node<Sznur>* tmp_s;
-//		Node<Koralik>* tmp_k;
+		Node<Koralik>* tmp_k;
 		Koralik k;
 
 		switch (op) {
@@ -394,6 +395,19 @@ int main() {
 
 				sznury.findSznurById(sn)->data.koraliki.pop(
 					sznury.findSznurById(sn)->data.koraliki.findKoralikById(k.id)->data);
+				break;
+			case 'M':
+				cin >> kr;
+				cin >> sS.ch1 >> sS.ch2 >> sS.ch3 >> dS.ch1 >> dS.ch2 >> dS.ch3;
+				// TODO zmienić ojca!
+				tmp_k = sznury.findSznurById(sS)->data.koraliki.findKoralikById(kr);
+				k.id = tmp_k->data.id;
+				k.ojciec = tmp_k->data.ojciec; //dS;
+				k.out = tmp_k->data.out;
+				//k.ojciec.print();
+				sznury.findSznurById(sS)->data.koraliki.pop(tmp_k->data);
+				sznury.findSznurById(dS)->data.koraliki.push(k);
+				//sznury.findSznurById(dS)->data.koraliki.findKoralikById(k.id)->data.ojciec.print();
 				break;
 			case 'R':
 				cin >> sn.ch1 >> sn.ch2 >> sn.ch3;
