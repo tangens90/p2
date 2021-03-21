@@ -1,3 +1,6 @@
+// link do repozytorium:
+// https://github.com/tangens90/homework/tree/main/p2/lab
+
 #include <iostream>
 #include <bitset>
 #include <sstream>
