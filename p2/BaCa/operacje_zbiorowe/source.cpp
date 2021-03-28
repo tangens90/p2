@@ -42,6 +42,46 @@ bool Emptiness(int set) {
 	return set == 0;
 }
 
+bool Nonempty(int set) {
+	return set != 0;
+}
+
+bool Disjoint(int set1, int set2) {
+	return (set1 & set2) == 0;
+}
+
+bool Conjunctive(int set1, int set2) {
+	return (set1 & set2) != 0;
+}
+
+bool Equality(int set1, int set2) {
+	return set1 == set2;
+}
+
+bool Inclusion(int set1, int set2) {
+	return (set1 | set2) == set2;
+}
+
+void Union(int set1, int set2, int* output) {
+	*output = set1 | set2;
+}
+
+void Intersection(int set1, int set2, int* output) {
+	*output = set1 & set2;
+}
+
+void Symmetric(int set1, int set2, int* output) {
+	*output = set1 ^ set2;
+}
+
+void Difference(int set1, int set2, int* output) {
+	*output = set1 ^ (~set2);
+}
+
+void Complement(int set, int* output) {
+	*output = ~set;
+}
+
 void calcSetElement(int power, int toPrint, char* output, int output_idx) {
 	if (power == 0)
 		return;

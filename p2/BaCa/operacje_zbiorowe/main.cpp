@@ -25,11 +25,13 @@ int main() {
 
 	int test3 = 0b00010;
 	cout << boolalpha << Emptiness(test3) << endl;
+	cout << boolalpha << Nonempty(test3) << endl;
 	bitset<32> bity3 = test3;
 	cout << bity3 << endl;
 
 	int test4 = 0b011;
 	cout << boolalpha << Emptiness(test4) << endl;
+	cout << boolalpha << Nonempty(test4) << endl;
 	bitset<32> bity4 = test4;
 	cout << bity4 << endl;
 	char e4[1000];
@@ -42,4 +44,10 @@ int main() {
 	char e5[1000];
 	Print(test5, &e5[0]);
 	cout << e5 << endl;
+
+	int test6 = 0b010;
+	int test7 = 0b101;
+	int test8 = 0b100;
+	cout << Disjoint(test6, test7) << endl;
+	cout << Disjoint(test7, test8) << endl;
 }
