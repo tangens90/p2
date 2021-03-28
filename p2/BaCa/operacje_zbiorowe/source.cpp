@@ -57,7 +57,6 @@ int strToSetElement(char* input, int* set, int i, int power) {
 void EraseRec(char* input, int* set, int i) {
 	i++;
 	if (*(input + i) == '\0') {
-		//std::cout << "jest \\ 0 !!!! " << i << std::endl;
 		return;
 	}
 	else if (*(input + i) == ' ') {
@@ -66,7 +65,6 @@ void EraseRec(char* input, int* set, int i) {
 	else if (*(input + i) == '0' || *(input + i) == '1') {
 		// wczytaj 5 znaków
 		int tmp = strToSetElement(input, set, i - 1, 32);
-		//std::cout << "i=" << i << " aa " << tmp << std::endl;
 		i += 4;
 
 		// usuń wczytany element
@@ -87,6 +85,42 @@ bool Nonempty(int set) {
 	return set != 0;
 }
 
+int CardinalityRec(int set, int i) {
+	i--;
+	if (i == -1) return 0;
+
+	if ((set & (1 << i)) == 0) {
+		return CardinalityRec(set, i);
+	}
+	else return 1 + CardinalityRec(set, i);
+}
+
+int Cardinality(int set) {
+	return CardinalityRec(set, 32);
+}
+
+int MemberRec(char* input, int set, int i) {
+	i++;
+	if (*(input + i) == '\0') {
+		return -1;
+	}
+	else if (*(input + i) == ' ') {
+		// nic
+		return MemberRec(input, set, i);
+	}
+	else if (*(input + i) == '0' || *(input + i) == '1') {
+		// wczytaj 5 znaków
+		return strToSetElement(input, &set, i - 1, 32);
+	}
+	return -1;
+}
+
+bool Member(char* input, int set) {
+	int tmp = MemberRec(input, set, -1);
+	
+	return (set & (1 << tmp)) != 0;
+}
+
 bool Disjoint(int set1, int set2) {
 	return (set1 & set2) == 0;
 }
@@ -104,23 +138,23 @@ bool Inclusion(int set1, int set2) {
 }
 
 void Union(int set1, int set2, int* output) {
-	*output = set1 | set2;
+	*output = (set1 | set2);
 }
 
 void Intersection(int set1, int set2, int* output) {
-	*output = set1 & set2;
+	*output = (set1 & set2);
 }
 
 void Symmetric(int set1, int set2, int* output) {
-	*output = set1 ^ set2;
+	*output = (set1 ^ set2);
 }
 
 void Difference(int set1, int set2, int* output) {
-	*output = set1 ^ (~set2);
+	*output = (set1 & (~set2));
 }
 
 void Complement(int set, int* output) {
-	*output = ~set;
+	*output = (~set);
 }
 
 void setElementToStr(int power, int toPrint, char* output, int output_idx) {

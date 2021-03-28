@@ -5,6 +5,7 @@
 using namespace std;
 
 int main() {
+	cout << boolalpha;
 	int test1 = 0b01101;
 	//string e1 = "   00110         ";
 	char e1[] = "   00110         ";
@@ -14,7 +15,12 @@ int main() {
 
 	int test2 = 0b00000;
 	char e2[] = " 00011   00010     11111   00110    11110 00100 00001    00000";
+	cout << "card=" << Cardinality(test2) << endl;
+	char in2[] = "        00011  ";
+	cout << "member=" << Member(&in2[0], test2) << endl;
 	Insert(&e2[0], &test2);
+	cout << "card=" << Cardinality(test2) << endl;
+	cout << "member=" << Member(&in2[0], test2) << endl;
 	bitset<32> bity2 = test2;
 	cout << bity2 << endl;
 
@@ -24,14 +30,14 @@ int main() {
 
 
 	int test3 = 0b00010;
-	cout << boolalpha << Emptiness(test3) << endl;
-	cout << boolalpha << Nonempty(test3) << endl;
+	cout << Emptiness(test3) << endl;
+	cout << Nonempty(test3) << endl;
 	bitset<32> bity3 = test3;
 	cout << bity3 << endl;
 
 	int test4 = 0b011;
-	cout << boolalpha << Emptiness(test4) << endl;
-	cout << boolalpha << Nonempty(test4) << endl;
+	cout << Emptiness(test4) << endl;
+	cout << Nonempty(test4) << endl;
 	bitset<32> bity4 = test4;
 	cout << bity4 << endl;
 	char e4[1000];
