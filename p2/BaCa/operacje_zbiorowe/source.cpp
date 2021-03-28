@@ -38,6 +38,47 @@ void Insert(char* input, int* set) {
 	InsertRec(input, set, -1, 32, 0, false);
 }
 
+int strToSetElement(char* input, int* set, int i, int power) {
+	power /= 2; // TODO przesunięcie bitowe
+	i++;
+	if (power == 0) {
+		return 0;
+	}
+	if (*(input + i) == '0') {
+		// nic
+		return strToSetElement(input, set, i, power);
+	}
+	else {
+		// cyfra == 1
+		return power + strToSetElement(input, set, i, power);
+	}
+}
+
+void EraseRec(char* input, int* set, int i) {
+	i++;
+	if (*(input + i) == '\0') {
+		//std::cout << "jest \\ 0 !!!! " << i << std::endl;
+		return;
+	}
+	else if (*(input + i) == ' ') {
+		// nic
+	}
+	else if (*(input + i) == '0' || *(input + i) == '1') {
+		// wczytaj 5 znaków
+		int tmp = strToSetElement(input, set, i - 1, 32);
+		//std::cout << "i=" << i << " aa " << tmp << std::endl;
+		i += 4;
+
+		// usuń wczytany element
+		*set = (*set & ~(1 << tmp));
+	}
+	EraseRec(input, set, i);
+}
+
+void Erase(char* input, int* set) {
+	EraseRec(input, set, -1);
+}
+
 bool Emptiness(int set) {
 	return set == 0;
 }
@@ -82,7 +123,7 @@ void Complement(int set, int* output) {
 	*output = ~set;
 }
 
-void calcSetElement(int power, int toPrint, char* output, int output_idx) {
+void setElementToStr(int power, int toPrint, char* output, int output_idx) {
 	if (power == 0)
 		return;
 
@@ -95,7 +136,7 @@ void calcSetElement(int power, int toPrint, char* output, int output_idx) {
 	}
 	power /= 2; // TODO przesunięcie bitowe
 	output_idx++;
-	calcSetElement(power, toPrint, output, output_idx);
+	setElementToStr(power, toPrint, output, output_idx);
 }
 
 int PrintRec(int set, char* output, int i, int output_idx) {
@@ -108,7 +149,7 @@ int PrintRec(int set, char* output, int i, int output_idx) {
 	if (set & (1 << i)) {
 		int power = 16;
 		int toPrint = i;
-		calcSetElement(power, toPrint, output, output_idx);
+		setElementToStr(power, toPrint, output, output_idx);
 		output_idx += 5;
 		*(output + output_idx) = ' ';
 		output_idx++;

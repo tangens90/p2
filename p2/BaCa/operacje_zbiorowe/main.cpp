@@ -50,4 +50,28 @@ int main() {
 	int test8 = 0b100;
 	cout << Disjoint(test6, test7) << endl;
 	cout << Disjoint(test7, test8) << endl;
+	
+	cout << endl;
+	int test9 = 0b01111;
+	char in9[] = "00011        00001   00000 00010";
+	Erase(&in9[0], &test9);
+	char out9[1000];
+	Print(test9, &out9[0]);
+	cout << out9 << endl;
+	bitset<32> bity9 = test9;
+	cout << bity9 << endl;
+
+	cout << endl;
+	int test10 = -1;
+	char out10[1000];
+	//char in10[] = "00001";
+	//char in10[] = " 11111  00000";
+	//char in10[] = "11111  00000 ";
+	char in10[] = "00000";
+	Erase(&in10[0], &test10);
+	Print(test10, &out10[0]);
+	cout << out10 << endl;
+	bitset<32> bity10 = test10;
+	cout << bity10 << endl;
+	
 }
