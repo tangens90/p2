@@ -68,16 +68,43 @@ int main() {
 	cout << bity9 << endl;
 
 	cout << endl;
-	int test10 = -1;
+	int test10 = 0b1100011;
+	cout << "card=" << Cardinality(test10) << endl;
+	test10 = -1;
 	char out10[1000];
 	//char in10[] = "00001";
 	//char in10[] = " 11111  00000";
 	//char in10[] = "11111  00000 ";
+	cout << "card=" << Cardinality(test10) << endl;
 	char in10[] = "00000";
 	Erase(&in10[0], &test10);
 	Print(test10, &out10[0]);
 	cout << out10 << endl;
 	bitset<32> bity10 = test10;
 	cout << bity10 << endl;
+	cout << "card=" << Cardinality(test10) << endl;
+
+	cout << endl;
+	int test11 = 10001;
+	int test12 = 110;
+	cout << LessThen(test11, test12) << endl;
+	cout << LessEqual(test11, test12) << endl;
+	cout << GreatThen(test11, test12) << endl;
+	cout << GreatEqual(test11, test12) << endl;
+
+	std::cout << LessThen( 0b1010, 0b1010) << ", ";
+	std::cout << LessEqual(0b1010, 0b1010) << "\n";
+	std::cout << LessThen( 0b1001, 0b1010) << ", ";
+	std::cout << LessEqual(0b1001, 0b1010) << '\n';
+	std::cout << LessThen( 0b1010, 0b1001) << ", ";
+	std::cout << LessEqual(0b1010, 0b1001) << '\n';
+	std::cout << LessThen( 0b10000000000000000000000000000000, 0b10000000000000000000000000000000) << ", ";
+	std::cout << LessEqual(0b10000000000000000000000000000000, 0b10000000000000000000000000000000) << "\n";
+	std::cout << LessThen( 0b11000000000000000000000000000000, 0b10100000000000000000000000000000) << ", ";
+	std::cout << LessEqual(0b11000000000000000000000000000000, 0b10100000000000000000000000000000) << "\n";
+	std::cout << LessThen( 0b10100000000000000000000000000000, 0b11000000000000000000000000000000) << ", ";
+	std::cout << LessEqual(0b10100000000000000000000000000000, 0b11000000000000000000000000000000) << "\n";
+	std::cout << LessThen( 0b01000000000000000000000000000000, 0b10000000000000000000000000000000) << ", ";
+	std::cout << LessEqual(0b01000000000000000000000000000000, 0b10000000000000000000000000000000) << "\n";
 	
 }

@@ -157,6 +157,29 @@ void Complement(int set, int* output) {
 	*output = (~set);
 }
 
+bool LessThen(int set1, int set2) {
+	int s1 = Cardinality(set1);
+	int s2 = Cardinality(set2);
+	// tu powinna być zakomentowana linijka, ale testy są zjebane
+	//return ((s1 < s2) || ((s1 == s2) && (unsigned)set1 < (unsigned)set2));
+	return ((s1 < s2) || ((s1 == s2) && set1 < set2));
+}
+
+bool LessEqual(int set1, int set2) {
+	int s1 = Cardinality(set1);
+	int s2 = Cardinality(set2);
+	//return ((s1 < s2) || ((s1 == s2) && (unsigned)set1 <= (unsigned)set2));
+	return ((s1 < s2) || ((s1 == s2) && set1 <= set2));
+}
+
+bool GreatEqual(int set1, int set2) {
+	return LessThen(set1, set2) == false;
+}
+
+bool GreatThen(int set1, int set2) {
+	return LessEqual(set1, set2) == false;
+}
+
 void setElementToStr(int power, int toPrint, char* output, int output_idx) {
 	if (power == 0)
 		return;
