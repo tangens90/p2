@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// ta funkcja przyjmuje tylko liczby dodatnie i bez znaków
 string csum2Rec(const string a, const string b, int i, int r) {
 	// b < a
 	int x = -1;
@@ -28,8 +29,10 @@ string csum2(const string a, const string b) {
 	return csum2Rec(a, b, 0, 0);
 }
 
-string Sum(int n, const string* args) {
-	return " ";
+string csumManyRec(int n, const string* args, int i) {
+	if (i == n - 2)
+		return csum2(args[i], args[i + 1]);
+	return csum2(args[i], csumManyRec(n, args, i + 1));
 }
 
 void get_va_nums(va_list& args, string* nums, int n, int i) {
@@ -39,17 +42,53 @@ void get_va_nums(va_list& args, string* nums, int n, int i) {
 	get_va_nums(args, nums, n, i);
 }
 
+string Sum(int n, const string* args) {
+	return csumManyRec(n, args, 0);
+}
+
 string Sum(int n, ...) {
 	va_list args;
 	va_start(args, n);
 
 	string* nums = new string[n];
 	get_va_nums(args, nums, n, 0);
-
-	for (int i = 0; i < n; i++) {
-		cout << nums[i] << " ";
-	}
-	cout << endl;
+	
 	va_end(args);
-	return " ";
+	string result = Sum(n, nums);
+	delete[] nums;
+	return result;
+}
+
+void Sum(string* output, int n, const string* args) {
+	*output = csumManyRec(n, args, 0);
+}
+
+void Sum(string* output, int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	*output = Sum(n, nums);
+	delete[] nums;
+}
+
+void Sum(string& output, int n, const string* args) {
+	output = csumManyRec(n, args, 0);
+}
+
+void Sum(string& output, int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	output = Sum(n, nums);
+	delete[] nums;
 }
