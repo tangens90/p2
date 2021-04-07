@@ -4,6 +4,19 @@
 #include <cstdarg>
 #include "source.cpp"
 
+TEST(cleanNumber, BasicClean) {
+	EXPECT_EQ(cleanNumber("123"), "123");
+	EXPECT_EQ(cleanNumber("+123"), "123");
+	EXPECT_EQ(cleanNumber("-123"), "123");
+	EXPECT_EQ(cleanNumber("00000000"), "0");
+	EXPECT_EQ(cleanNumber("-0"), "0");
+	EXPECT_EQ(cleanNumber("-0000000000"), "0");
+	EXPECT_EQ(cleanNumber("000005"), "5");
+	EXPECT_EQ(cleanNumber("0000050000"), "50000");
+	EXPECT_EQ(cleanNumber("-000005"), "5");
+	EXPECT_EQ(cleanNumber("-0000050000"), "50000");
+}
+
 TEST(csum2, SumOfPositiveNumbers) {
 	EXPECT_EQ(csum2("2137", "54"), "2191");
 	EXPECT_NE(csum2("2137", "54"), " 2191");
@@ -41,6 +54,51 @@ TEST(Sum, SumOfMultiplePositiveNumbers) {
 	string arr4[] = {"123", "345", "999", "1000000", "1"};
 	const string* txt4 = &arr4[0];
 	EXPECT_EQ(Sum(5, txt4), "1001468");
+
+	string arr5[] = {"9999", "9999"};
+	const string* txt5 = &arr5[0];
+	EXPECT_EQ(Sum(2, txt5), "19998");
+}
+
+ TEST(Sum, SumWithLeadingZeros) {
+	//GTEST_SKIP();
+
+	string arr5[] = {"00000000000", "0"};
+	const string* txt5 = &arr5[0];
+	EXPECT_EQ(Sum(2, txt5), "0");
+
+	string arr6[] = {"00000000000", "1"};
+	const string* txt6 = &arr6[0];
+	EXPECT_EQ(Sum(2, txt6), "1");
+
+	string arr7[] = {"00000000001", "0"};
+	const string* txt7 = &arr7[0];
+	EXPECT_EQ(Sum(2, txt7), "1");
+
+	string arr8[] = {"00000000001", "1"};
+	const string* txt8 = &arr8[0];
+	EXPECT_EQ(Sum(2, txt8), "2");
+ }
+
+TEST(Sum, SumOfNegativeNumbers) {
+//	string arr00[] {"-1", "1", "-1", "1"};
+//	const string* txt00 = &arr00[0];
+//	EXPECT_EQ(Sum(4, txt00), "0");
+	string arr00[] {"-1", "-1", "-1", "-1"};
+	const string* txt00 = &arr00[0];
+	EXPECT_EQ(Sum(4, txt00), "-4");
+
+	string arr01[] {"-9999", "-9999"};
+	const string* txt01 = &arr01[0];
+	EXPECT_EQ(Sum(2, txt01), "-19998");
+
+	string arr02[] {"-00000000", "-0"};
+	const string* txt02 = &arr02[0];
+	EXPECT_EQ(Sum(2, txt02), "0");
+
+	string arr03[] {"-0", "-0"};
+	const string* txt03 = &arr03[0];
+	EXPECT_EQ(Sum(2, txt03), "0");
 }
 
 TEST(Sum, OverloadingFunction) {
@@ -63,25 +121,6 @@ TEST(Sum, OverloadingFunction) {
 }
 
 
- TEST(Sum, SumWithLeadingZeros) {
-	GTEST_SKIP();
-
-	string arr5[] = {"00000000000", "0"};
-	const string* txt5 = &arr5[0];
-	EXPECT_EQ(Sum(2, txt5), "0");
-
-	string arr6[] = {"00000000000", "1"};
-	const string* txt6 = &arr6[0];
-	EXPECT_EQ(Sum(2, txt6), "1");
-
-	string arr7[] = {"00000000001", "0"};
-	const string* txt7 = &arr7[0];
-	EXPECT_EQ(Sum(2, txt7), "1");
-
-	string arr8[] = {"00000000001", "1"};
-	const string* txt8 = &arr8[0];
-	EXPECT_EQ(Sum(2, txt8), "2");
- }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest( &argc, argv );

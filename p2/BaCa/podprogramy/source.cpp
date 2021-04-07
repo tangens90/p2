@@ -4,9 +4,40 @@
 
 using namespace std;
 
-// ta funkcja przyjmuje tylko liczby dodatnie i bez znaków
+bool isNegative(const string a) {
+	if (a[0] == '-')	return true;
+	if (a[0] == '+')	return false;
+	return false;
+}
+
+string cleanNumberRec(const string a, int i, bool beforeNum) {
+	if (i == a.size())
+		return "";
+
+	switch (a[i]) {
+		case '+':
+		case '-':
+			return cleanNumberRec(a, i + 1, beforeNum);
+		case '0':
+			if (beforeNum)
+				return cleanNumberRec(a, i + 1, beforeNum);
+			else
+				return '0' + cleanNumberRec(a, i + 1, beforeNum);
+		default:
+			beforeNum = false;
+			return a[i] + cleanNumberRec(a, i + 1, beforeNum);
+	}
+}
+
+string cleanNumber(const string a) {
+	string result = cleanNumberRec(a, 0, true);
+	if (result.size() == 0)
+		return "0";
+	return result;
+}
+
+// ta funkcja przyjmuje tylko liczby dodatnie oraz bez znaków + i -
 string csum2Rec(const string a, const string b, int i, int r) {
-	// b < a
 	int x = -1;
 	int y = -1;
 	if (i >= a.size()) x = 0;
@@ -24,9 +55,26 @@ string csum2Rec(const string a, const string b, int i, int r) {
 
 string csum2(const string a, const string b) {
 	// - + + itd.
-	// b < a
-
-	return csum2Rec(a, b, 0, 0);
+	// NOTE założenie że b < a jest chyba niepotrzebne
+	// TODO czyszczenie z +, - i niepotrzebnych zer
+	// TODO ostateczne zwracanie liczby powinno czyścić liczbę ze znaków
+	// oraz doklejać - jeśli to potrzebne
+	string cleanA = cleanNumber(a);
+	string cleanB = cleanNumber(b);
+	if (isNegative(a) && isNegative(b)) {
+		string temp = cleanNumber(csum2Rec(cleanA, cleanB, 0, 0));
+		if (temp == "0")	return temp;
+		else	return '-' + cleanNumber(csum2Rec(cleanA, cleanB, 0, 0));
+	}
+	else if ( (isNegative(a) && isNegative(b) == false) || 
+			  (isNegative(a) == false && isNegative(b)) ) {
+		
+	}
+	else {
+		// a, b >= 0
+		return cleanNumber(csum2Rec(cleanA, cleanB, 0, 0));
+	}
+	return "coś się zjebało";
 }
 
 string csumManyRec(int n, const string* args, int i) {
