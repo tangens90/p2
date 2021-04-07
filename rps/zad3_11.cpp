@@ -45,8 +45,9 @@ void simulate(Player* players, int r, vector<int>& active_players, int tokens_su
 	while ((winner = found_winner(players, r, tokens_sum)) == -1) {
 		int a, b;
 		getRandPair(active_players.size(), a, b);
-		int toRemove = getRand(2) == 0 ? a : b;
-		int toAdd = getRand(2) == 1 ? a : b;
+		int result = getRand(2);
+		int toRemove = result == 0 ? a : b;
+		int toAdd = result == 0 ? b : b;
 		players[active_players[toRemove]].tokens--;
 		players[active_players[toAdd]].tokens++;
 		if (players[active_players[toRemove]].tokens <= 0)
@@ -60,7 +61,7 @@ int main() {
 	srand(time(NULL));
 	// n - ilość symulacji
 	// r - ilość graczy
-	int r, n;
+	int n, r;
 	int tokens_sum = 0;
 	cin >> n >> r;
 	Player* players = new Player[r];
@@ -79,6 +80,8 @@ int main() {
 	}
 
 	for (int i = 0; i < r; i++) {
-		cout << i << ": " << players[i].wins << endl;
+		cout << i << ":\twins=" << players[i].wins << "\t" << (int)((double)players[i].wins / (double)n * 100.0) << "%" << endl;
 	}
+
+	delete[] players;
 }
