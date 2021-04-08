@@ -111,7 +111,7 @@ string csum2(const string a, const string b) {
 	if (isNegative(a) && isNegative(b)) {
 		string temp = cleanNumber(csum2Rec(unsignA, unsignB, 0, 0));
 		if (temp == "0")	return temp;
-		else	return '-' + cleanNumber(csum2Rec(unsignA, unsignB, 0, 0));
+		else	return '-' + temp;
 	}
 	else if ( (isNegative(a) && isNegative(b) == false) || 
 			  (isNegative(a) == false && isNegative(b)) ) {
@@ -256,10 +256,21 @@ void cmult2Rec(const string a, const string b, int i, string& sum, string& shift
 }
 
 string cmult2(const string a, const string b) {
+	string unsignA = unsignNum(a);
+	string unsignB = unsignNum(b);
 	string shift = "";
 	string sum = "0";
-	cmult2Rec(a, b, 0, sum, shift);
-	return sum;
+	cmult2Rec(unsignA, unsignB, 0, sum, shift);
+	bool negat = false;
+	if (isNegative(a))	negat = !negat;
+	if (isNegative(b))	negat = !negat;
+	if (negat) {
+		if (cleanNumber(sum) == "0")
+			return "0";
+		else
+			return '-' + cleanNumber(sum);
+	}
+	return cleanNumber(sum);
 }
 
 string cmultManyRec(int n, const string* args, int i) {
