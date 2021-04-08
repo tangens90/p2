@@ -17,6 +17,15 @@ TEST(cleanNumber, BasicClean) {
 	EXPECT_EQ(cleanNumber("-0000050000"), "50000");
 }
 
+TEST(twosComplement, BasicOperation) {
+	EXPECT_EQ(twosComplement("20"), "80");
+	EXPECT_EQ(twosComplement("5"), "5");
+	EXPECT_EQ(twosComplement("1"), "9");
+	EXPECT_EQ(twosComplement("1234"), "8766");
+	EXPECT_EQ(twosComplement("94"), "06");
+	EXPECT_EQ(twosComplement("123"), "877");
+}
+
 TEST(csum2, SumOfPositiveNumbers) {
 	EXPECT_EQ(csum2("2137", "54"), "2191");
 	EXPECT_NE(csum2("2137", "54"), " 2191");
@@ -33,6 +42,29 @@ TEST(csum2, SumOfPositiveNumbers) {
 	EXPECT_EQ(csum2("48", "62"), "110");
 }
 
+TEST(ignoreFirstDigit, BasicTest) {
+	EXPECT_EQ(ignoreFirstDigit("3111"), "111");
+	EXPECT_EQ(ignoreFirstDigit("10"), "0");
+	EXPECT_EQ(ignoreFirstDigit("0"), "");
+}
+
+TEST(numLessEqual, BasicTest) {
+	EXPECT_TRUE(numLessEqual("1", "123"));
+	EXPECT_FALSE(numLessEqual("123", "1"));
+	EXPECT_TRUE(numLessEqual("1", "1"));
+	EXPECT_TRUE(numLessEqual("456", "456"));
+	EXPECT_TRUE(numLessEqual("12", "13"));
+	EXPECT_TRUE(numLessEqual("4", "6"));
+	EXPECT_TRUE(numLessEqual("04", "06"));
+	EXPECT_TRUE(numLessEqual("04", "006"));
+	EXPECT_FALSE(numLessEqual("2137", "1337"));
+}
+
+TEST(unsignNum, BasicTest) {
+	EXPECT_EQ(unsignNum("001"), "001");
+	EXPECT_EQ(unsignNum("+001"), "001");
+	EXPECT_EQ(unsignNum("-001"), "001");
+}
 TEST(Sum, SumOfMultiplePositiveNumbers) {
 	string arr1[] = {"123", "345"};
 	const string* txt1 = &arr1[0];
@@ -61,8 +93,6 @@ TEST(Sum, SumOfMultiplePositiveNumbers) {
 }
 
  TEST(Sum, SumWithLeadingZeros) {
-	//GTEST_SKIP();
-
 	string arr5[] = {"00000000000", "0"};
 	const string* txt5 = &arr5[0];
 	EXPECT_EQ(Sum(2, txt5), "0");
@@ -81,9 +111,6 @@ TEST(Sum, SumOfMultiplePositiveNumbers) {
  }
 
 TEST(Sum, SumOfNegativeNumbers) {
-//	string arr00[] {"-1", "1", "-1", "1"};
-//	const string* txt00 = &arr00[0];
-//	EXPECT_EQ(Sum(4, txt00), "0");
 	string arr00[] {"-1", "-1", "-1", "-1"};
 	const string* txt00 = &arr00[0];
 	EXPECT_EQ(Sum(4, txt00), "-4");
@@ -99,6 +126,36 @@ TEST(Sum, SumOfNegativeNumbers) {
 	string arr03[] {"-0", "-0"};
 	const string* txt03 = &arr03[0];
 	EXPECT_EQ(Sum(2, txt03), "0");
+
+	string arr04[] {"-0", "-0", "-15"};
+	const string* txt04 = &arr04[0];
+	EXPECT_EQ(Sum(3, txt04), "-15");
+
+	EXPECT_EQ(Sum(2, "-999", "-0"), "-999");
+}
+
+TEST(Sum, SumOfPositiveAndNegativeNumbers) {
+	//GTEST_SKIP();
+
+	EXPECT_EQ(Sum(2, "000", "-000123"), "-123");
+	EXPECT_EQ(Sum(2, "-15", "10"), "-5");
+	EXPECT_EQ(Sum(2, "-999", "0"), "-999");
+	EXPECT_EQ(Sum(2, "-0", "+0"), "0");
+	EXPECT_EQ(Sum(2, "-0", "0"), "0");
+	EXPECT_EQ(Sum(2, "+0", "-0"), "0");
+	EXPECT_EQ(Sum(2, "-999", "1"), "-998");
+	EXPECT_EQ(Sum(4, "-1", "1", "-1", "1"), "0");
+	EXPECT_EQ(Sum(3, "-1", "1", "-1"), "-1");
+	EXPECT_EQ(Sum(2, "-1234", "+1234"), "0");
+	EXPECT_EQ(Sum(2, "-1234", "1234"), "0");
+	EXPECT_EQ(Sum(2, "+001", "-0001112"), "-1111");
+	EXPECT_EQ(Sum(2, "68", "-94"), "-26");
+	EXPECT_EQ(Sum(2, "-68", "94"), "26");
+	EXPECT_EQ(Sum(2, "94", "-68"), "26");
+	EXPECT_EQ(Sum(2, "-94", "68"), "-26");
+	EXPECT_EQ(Sum(2, "-94", "94"), "0");
+	EXPECT_EQ(Sum(2, "94", "-94"), "0");
+	EXPECT_EQ(Sum(3, "-68", "94", "-123"), "-97");
 }
 
 TEST(Sum, OverloadingFunction) {
