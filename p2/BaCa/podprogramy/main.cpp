@@ -4,7 +4,7 @@
 #include <cstdarg>
 #include "source.cpp"
 
-TEST(cleanNumber, BasicClean) {
+TEST(HelperFunctions, cleanNumber) {
 	EXPECT_EQ(cleanNumber("123"), "123");
 	EXPECT_EQ(cleanNumber("+123"), "123");
 	EXPECT_EQ(cleanNumber("-123"), "123");
@@ -17,7 +17,7 @@ TEST(cleanNumber, BasicClean) {
 	EXPECT_EQ(cleanNumber("-0000050000"), "50000");
 }
 
-TEST(twosComplement, BasicOperation) {
+TEST(HelperFunctions, twosComplement) {
 	EXPECT_EQ(twosComplement("20"), "80");
 	EXPECT_EQ(twosComplement("5"), "5");
 	EXPECT_EQ(twosComplement("1"), "9");
@@ -26,7 +26,7 @@ TEST(twosComplement, BasicOperation) {
 	EXPECT_EQ(twosComplement("123"), "877");
 }
 
-TEST(csum2, SumOfPositiveNumbers) {
+TEST(HelperFunctions, csum2) {
 	EXPECT_EQ(csum2("2137", "54"), "2191");
 	EXPECT_NE(csum2("2137", "54"), " 2191");
 	EXPECT_NE(csum2("2137", "54"), "2191 ");
@@ -42,13 +42,13 @@ TEST(csum2, SumOfPositiveNumbers) {
 	EXPECT_EQ(csum2("48", "62"), "110");
 }
 
-TEST(ignoreFirstDigit, BasicTest) {
+TEST(HelperFunctions, ignoreFirstDigit) {
 	EXPECT_EQ(ignoreFirstDigit("3111"), "111");
 	EXPECT_EQ(ignoreFirstDigit("10"), "0");
 	EXPECT_EQ(ignoreFirstDigit("0"), "");
 }
 
-TEST(numLessEqual, BasicTest) {
+TEST(HelperFunctions, numLessEqual) {
 	EXPECT_TRUE(numLessEqual("1", "123"));
 	EXPECT_FALSE(numLessEqual("123", "1"));
 	EXPECT_TRUE(numLessEqual("1", "1"));
@@ -60,7 +60,7 @@ TEST(numLessEqual, BasicTest) {
 	EXPECT_FALSE(numLessEqual("2137", "1337"));
 }
 
-TEST(unsignNum, BasicTest) {
+TEST(HelperFunctions, unsignNum) {
 	EXPECT_EQ(unsignNum("001"), "001");
 	EXPECT_EQ(unsignNum("+001"), "001");
 	EXPECT_EQ(unsignNum("-001"), "001");
