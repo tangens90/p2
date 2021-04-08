@@ -65,6 +65,35 @@ TEST(HelperFunctions, unsignNum) {
 	EXPECT_EQ(unsignNum("+001"), "001");
 	EXPECT_EQ(unsignNum("-001"), "001");
 }
+
+TEST(HelperFunctions, cmult2digit) {
+	EXPECT_EQ(cmult2digit("2137", '5'), "10685");
+	EXPECT_EQ(cmult2digit("2137", '4'), "8548");
+	EXPECT_EQ(cmult2digit("2137", '1'), "2137");
+	EXPECT_EQ(cmult2digit("100", '1'), "100");
+	EXPECT_EQ(cmult2digit("1", '1'), "1");
+	EXPECT_EQ(cmult2digit("5", '5'), "25");
+	EXPECT_EQ(cmult2digit("9", '9'), "81");
+	EXPECT_EQ(cmult2digit("99", '9'), "891");
+	EXPECT_EQ(cmult2digit("9999", '9'), "89991");
+	EXPECT_EQ(cmult2digit("48", '6'), "288");
+	EXPECT_EQ(cmult2digit("48", '2'), "96");
+ }
+
+TEST(HelperFunctions, cmult2) {
+	EXPECT_EQ(cmult2("2137", "54"), "115398");
+	EXPECT_EQ(cmult2("100", "1"), "100");
+	EXPECT_EQ(cmult2("1", "100"), "100");
+	EXPECT_EQ(cmult2("1", "1"), "1");
+	EXPECT_EQ(cmult2("5", "5"), "25");
+	EXPECT_EQ(cmult2("9", "9"), "81");
+	EXPECT_EQ(cmult2("99", "99"), "9801");
+	EXPECT_EQ(cmult2("9999", "9999"), "99980001");
+	EXPECT_EQ(cmult2("9999", "999"), "9989001");
+	EXPECT_EQ(cmult2("9999", "99"), "989901");
+	EXPECT_EQ(cmult2("48", "62"), "2976");
+}
+
 TEST(Sum, SumOfMultiplePositiveNumbers) {
 	string arr1[] = {"123", "345"};
 	const string* txt1 = &arr1[0];
@@ -175,6 +204,43 @@ TEST(Sum, OverloadingFunction) {
 	string output4;
 	Sum(output4, 5, "123", "345", "999", "1000000", "1");
 	EXPECT_EQ(output4, "1001468");
+}
+
+TEST(Mult, MultiplyingPositiveNumbers) {
+	string arr0[] = {"123", "345", "1"};
+	const string* txt0 = &arr0[0];
+	EXPECT_EQ(Mult(3, txt0), "42435");
+
+	EXPECT_EQ(Mult(2, "2137", "54"), "115398");
+	EXPECT_EQ(Mult(2, "100", "1"), "100");
+	EXPECT_EQ(Mult(2, "1", "100"), "100");
+	EXPECT_EQ(Mult(2, "1", "1"), "1");
+	EXPECT_EQ(Mult(2, "5", "5"), "25");
+	EXPECT_EQ(Mult(2, "9", "9"), "81");
+	EXPECT_EQ(Mult(2, "99", "99"), "9801");
+	EXPECT_EQ(Mult(2, "9999", "9999"), "99980001");
+	EXPECT_EQ(Mult(2, "9999", "999"), "9989001");
+	EXPECT_EQ(Mult(2, "9999", "99"), "989901");
+	EXPECT_EQ(Mult(2, "48", "62"), "2976");
+}
+
+TEST(Mult, OverloadingFunction) {
+	string arr4[] = {"123", "345", "1"};
+	const string* txt4 = &arr4[0];
+	EXPECT_EQ(Mult(3, txt4), "42435");
+	EXPECT_EQ(Mult(3, "123", "345", "1"), "42435");
+	string output1;
+	Mult(&output1, 3, txt4);
+	EXPECT_EQ(output1, "42435");
+	string output2;
+	Mult(&output2, 3, "123", "345", "1");
+	EXPECT_EQ(output2, "42435");
+	string output3;
+	Mult(output3, 3, txt4);
+	EXPECT_EQ(output3, "42435");
+	string output4;
+	Mult(output4, 3, "123", "345", "1");
+	EXPECT_EQ(output4, "42435");
 }
 
 

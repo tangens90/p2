@@ -212,3 +212,109 @@ void Sum(string& output, int n, ...) {
 	output = Sum(n, nums);
 	delete[] nums;
 }
+
+// ================================
+// ========= MULT =================
+// ================================
+
+// ta funkcja przyjmuje tylko liczby dodatnie oraz bez znaków + i -
+string cmult2digitRec(const string a, const char b, int i, int r) {
+	if (i >= a.size()) {
+		if (r == 0)	return "";
+		else {
+			string s = "0";
+			s[0] = s[0] + r;
+			return s;
+		}
+	}
+	int x = a[a.size() - 1 - i] - '0';
+	int y = b - '0';
+	//cout << "x=" << (char)(x + '0') << "\ty=" << (char)(y + '0') << endl;
+
+	int result = x * y + r;
+	int digit = result % 10;
+	char digitChar = digit + '0';
+	//cout << "result=" << result << endl;
+	return cmult2digitRec(a, b, i + 1, result / 10) + digitChar;
+}
+
+string cmult2digit(const string a, const char b) {
+	return cmult2digitRec(a, b, 0, 0);
+}
+
+void cmult2Rec(const string a, const string b, int i, string& sum, string& shift) {
+	if (i >= b.size())
+		return;
+//	cout << "a=" << a << endl;
+//	cout << "b[...]=" << b[b.size() - 1 - i] << endl;
+	string partial = cmult2digit(a, b[b.size() - 1 - i]);
+//	cout << "partial=" << partial << endl;
+	partial += shift;
+	shift += '0';
+	sum = csum2(sum, partial);
+	cmult2Rec(a, b, i + 1, sum, shift);
+}
+
+string cmult2(const string a, const string b) {
+	string shift = "";
+	string sum = "0";
+	cmult2Rec(a, b, 0, sum, shift);
+	return sum;
+}
+
+string cmultManyRec(int n, const string* args, int i) {
+	if (i == n - 2)
+		return cmult2(args[i], args[i + 1]);
+	return cmult2(args[i], cmultManyRec(n, args, i + 1));
+}
+
+string Mult(int n, const string* args) {
+	return cmultManyRec(n, args, 0);
+}
+
+string Mult(int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	string result = Mult(n, nums);
+	delete[] nums;
+	return result;
+}
+
+void Mult(string* output, int n, const string* args) {
+	*output = cmultManyRec(n, args, 0);
+}
+
+void Mult(string* output, int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	*output = Mult(n, nums);
+	delete[] nums;
+}
+
+void Mult(string& output, int n, const string* args) {
+	output = cmultManyRec(n, args, 0);
+}
+
+void Mult(string& output, int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	output = Mult(n, nums);
+	delete[] nums;
+}
