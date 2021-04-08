@@ -161,6 +161,7 @@ TEST(Sum, SumOfNegativeNumbers) {
 	EXPECT_EQ(Sum(3, txt04), "-15");
 
 	EXPECT_EQ(Sum(2, "-999", "-0"), "-999");
+	EXPECT_EQ(Sum(2, "-0", "-0"), "0");
 }
 
 TEST(Sum, SumOfPositiveAndNegativeNumbers) {
@@ -193,6 +194,11 @@ TEST(Sum, SumOfPositiveAndNegativeNumbers) {
 	EXPECT_EQ(Sum(3, txt00), "-4233998687778");
     const string* txt01 = &arr01[0];
 	EXPECT_EQ(Sum(7, txt01), "-1423899999999999999999999999999999999999999900342547649665487696827793");
+
+	EXPECT_EQ(Sum(2, "-7847168", "7204296"), "-642872");
+	EXPECT_EQ(Sum(2, "-7847168", "7204296"), "-642872");
+	EXPECT_EQ(Sum(2, "-07847168", "000000000000000007204296"), "-642872");
+
 }
 
 TEST(Sum, OverloadingFunction) {
@@ -230,6 +236,9 @@ TEST(Mult, MultiplyingPositiveNumbers) {
 	EXPECT_EQ(Mult(2, "9999", "999"), "9989001");
 	EXPECT_EQ(Mult(2, "9999", "99"), "989901");
 	EXPECT_EQ(Mult(2, "48", "62"), "2976");
+	EXPECT_EQ(Mult(2, "-7847168", "7204296"), "-56533321033728");
+	EXPECT_EQ(Mult(2, "-07847168", "7204296"), "-56533321033728");
+	EXPECT_EQ(Mult(2, "-07847168", "000000000007204296"), "-56533321033728");
 }
 
 TEST(Mult, MultOfNegativeNumbers) {
@@ -238,6 +247,7 @@ TEST(Mult, MultOfNegativeNumbers) {
 	EXPECT_EQ(Mult(2, "-999", "0"), "0");
 	EXPECT_EQ(Mult(2, "-0", "+0"), "0");
 	EXPECT_EQ(Mult(2, "-0", "0"), "0");
+	EXPECT_EQ(Mult(2, "-0", "-0"), "0");
 	EXPECT_EQ(Mult(2, "+0", "-0"), "0");
 	EXPECT_EQ(Mult(2, "-999", "1"), "-999");
 	EXPECT_EQ(Mult(4, "-1", "1", "-1", "1"), "1");
@@ -276,7 +286,25 @@ TEST(Mult, OverloadingFunction) {
 	EXPECT_EQ(output4, "42435");
 }
 
+TEST(Operations, Random) {
+	string arr01[] = {"123", "345", "1"};
+	const string* txt01 = &arr01[0];
+	EXPECT_EQ(Operation(Sum, 3, txt01), "469");
+}
+
 TEST(DC, TestyZDiscorda) {
+
+	EXPECT_EQ(Sum(2, "-1234", "+1234"), "0");
+	EXPECT_EQ(Sum(2, "-123", "+123"), "0");
+	EXPECT_EQ(Sum(2, "+123", "-123"), "0");
+	EXPECT_EQ(Sum(2, "1234", "-1233"), "1");
+	EXPECT_EQ(Sum(2, "-0002", "00000"), "-2");
+	EXPECT_EQ(Sum(2, "00000", "-0002"), "-2");
+	EXPECT_EQ(Mult(2, "-0002", "00000"), "0");
+	EXPECT_EQ(Mult(2, "00000", "-0002"), "0");
+	EXPECT_EQ(Mult(2, "00000", "0000"), "0");
+	EXPECT_EQ(Mult(2, "00000", "00000"), "0");
+	EXPECT_EQ(Sum(2, "00000", "00000"), "0");
 
 	const string* napis; 
 	
@@ -296,6 +324,10 @@ TEST(DC, TestyZDiscorda) {
 	string arr3[] = {"0000000000000009268733", "+0000000000000000000007009353" };  
 	napis = &arr3[0]; 
 	 cout << Sum(2, napis) << endl;  
+
+//	string arr04[] = {"-7847168", "7204296" };  
+//	napis = &arr04[0]; 
+//	 cout << Sum(2, napis) << endl;  
 	
 	string arr4[] = {"-07847168", "0000000000000000000007204296" };  
 	napis = &arr4[0]; 

@@ -28,9 +28,20 @@ string cleanNumberRec(const string a, int i, bool befNum) {
 				return cleanNumberRec(a, i + 1, befNum);
 			else
 				return '0' + cleanNumberRec(a, i + 1, befNum);
-		default:
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
 			befNum = false;
 			return a[i] + cleanNumberRec(a, i + 1, befNum);
+		default:
+			return cleanNumberRec(a, i + 1, befNum);
+			break;
 	}
 }
 
@@ -155,6 +166,57 @@ string csumManyRec(int n, const string* args, int i) {
 	return csum2(args[i], csumManyRec(n, args, i + 1));
 }
 
+string cleanZerosRec(string* args, int i, int j, bool befNum) {
+	if (args[i].size() <= j) return "";
+	switch (args[i][j]) {
+		case '+':
+			return cleanZerosRec(args, i, j + 1, befNum);
+		case '-':
+			return '-' + cleanZerosRec(args, i, j + 1, befNum);
+		case '0':
+			if (befNum) {
+				return cleanZerosRec(args, i, j + 1, befNum);
+			}
+			else 
+				return args[i][j] + cleanZerosRec(args, i, j + 1, befNum);
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			befNum = false;
+			return args[i][j] + cleanZerosRec(args, i, j + 1, befNum);
+		default:
+			return cleanZerosRec(args, i, j + 1, befNum);
+
+ 	}
+}
+
+// wyczyść argument args[i]
+string cleanZeros(string* args, int i) {
+	return cleanZerosRec(args, i, 0, true);
+}
+
+void cleanArgsRec(int n, string* args, int i) {
+	if (i >= n)	return;
+	args[i] = cleanZeros(args, i);
+	cleanArgsRec(n, args, i + 1);
+}
+
+void cleanArgs(int n, string* args) {
+	cleanArgsRec(n, args, 0);
+}
+
+string csumMany(int n, const string* args) {
+	string* ar = (string*)args;
+	cleanArgs(n, ar);
+	return csumManyRec(n, ar, 0);
+}
+
 void get_va_nums(va_list& args, string* nums, int n, int i) {
 	if (i >= n)
 		return;
@@ -163,7 +225,7 @@ void get_va_nums(va_list& args, string* nums, int n, int i) {
 }
 
 string Sum(int n, const string* args) {
-	return csumManyRec(n, args, 0);
+	return csumMany(n, args);
 }
 
 string Sum(int n, ...) {
@@ -279,16 +341,19 @@ string cmultManyRec(int n, const string* args, int i) {
 	return cmult2(args[i], cmultManyRec(n, args, i + 1));
 }
 
+string cmultMany(int n, const string* args) {
+	string* ar = (string*)args;
+	cleanArgs(n, ar);
+	return cmultManyRec(n, ar, 0);
+}
+
 string Mult(int n, const string* args) {
-	return cmultManyRec(n, args, 0);
+	return cmultMany(n, args);
 }
 
 string Mult(int n, ...) {
 	va_list args;
-	va_start(args, n);
-
-	string* nums = new string[n];
-	get_va_nums(args, nums, n, 0);
+	va_start(args, n); string* nums = new string[n]; get_va_nums(args, nums, n, 0);
 	
 	va_end(args);
 	string result = Mult(n, nums);
@@ -327,5 +392,61 @@ void Mult(string& output, int n, ...) {
 	va_end(args);
 	
 	output = Mult(n, nums);
+	delete[] nums;
+}
+
+// ================================
+// ========= OPERATION ============
+// ================================
+
+string Operation(string(*f)(int, const string*), int n, const string* args) {
+	return f(n, args);
+}
+
+string Operation(string(*f)(int, const string*), int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	string out = f(n, nums);
+	delete[] nums;
+	return out;
+}
+
+void Operation(string* output, string(*f)(int, const string*), int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	*output = f(n, nums);
+	delete[] nums;
+}
+
+void Operation(string* output, string(*f)(int, const string*), int n, const string* args) {
+	*output = f(n, args);
+}
+
+void Operation(string& output, string(*f)(int, const string*), int n, const string* args) {
+	output = f(n, args);
+}
+
+void Operation(string& output, string(*f)(int, const string*), int n, ...) {
+	va_list args;
+	va_start(args, n);
+
+	string* nums = new string[n];
+	get_va_nums(args, nums, n, 0);
+	
+	va_end(args);
+	
+	output = f(n, nums);
 	delete[] nums;
 }
