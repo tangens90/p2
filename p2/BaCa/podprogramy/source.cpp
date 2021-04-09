@@ -41,7 +41,6 @@ string cleanNumberRec(const string a, int i, bool befNum) {
 			return a[i] + cleanNumberRec(a, i + 1, befNum);
 		default:
 			return cleanNumberRec(a, i + 1, befNum);
-			break;
 	}
 }
 
@@ -111,6 +110,20 @@ string csum2Rec(const string a, const string b, int i, int r) {
 	return csum2Rec(a, b, i + 1, result / 10) + digitChar;
 }
 
+void addZerosToMatchRec(const string a, const string b, string& x) {
+	if (x.size() >= b.size()) return;
+	
+	x = '0' + x;
+	addZerosToMatchRec(a, b, x);
+}
+
+// dopisujemy zera do a tak, żeby był długości b
+string addZerosToMatch(const string a, const string b) {
+	string tmp = a;
+	addZerosToMatchRec(a, b, tmp);
+	return tmp;
+}
+
 string csum2(const string a, const string b) {
 	// - + + itd.
 	// NOTE założenie że b < a jest chyba niepotrzebne
@@ -138,7 +151,7 @@ string csum2(const string a, const string b) {
 		
 		//cout << "ujemna=" << ujemna << endl;
 		//cout << "dodatnia=" << dodatnia << endl;
-		string ujemnaU2 = twosComplement(ujemna);
+		string ujemnaU2 = twosComplement(addZerosToMatch(ujemna, dodatnia));
 		// NOTE wiemy, że ujemnaU2 i dodatnia nie mają + i - na początku
 		// ale moga mieć niepotrzebne zera. żeby ich nie ucinać wywołuję
 		// csum2Rec, które nie przechodzi przez cleanNumber
@@ -157,7 +170,7 @@ string csum2(const string a, const string b) {
 		// a, b >= 0
 		return cleanNumber(csum2Rec(unsignA, unsignB, 0, 0));
 	}
-	return "coś się zjebało";
+	//return "coś się zjebało";
 }
 
 string csumManyRec(int n, const string* args, int i) {
@@ -198,7 +211,10 @@ string cleanZerosRec(string* args, int i, int j, bool befNum) {
 
 // wyczyść argument args[i]
 string cleanZeros(string* args, int i) {
-	return cleanZerosRec(args, i, 0, true);
+	string tmp = cleanZerosRec(args, i, 0, true);
+	if (tmp == "-" || tmp == "")
+		return "0";
+	else return tmp;
 }
 
 void cleanArgsRec(int n, string* args, int i) {

@@ -17,6 +17,23 @@ TEST(HelperFunctions, cleanNumber) {
 	EXPECT_EQ(cleanNumber("-0000050000"), "50000");
 }
 
+TEST(HelperFunctions, cleanZeros) {
+	string vals[] = {"-0000", "-0", "+0", "+00000", "123", "-123", "04", "-5", "-009", "007", "00010000", "-00010000"};
+	string* args = &vals[0];
+	EXPECT_EQ(cleanZeros(args, 0), "0");
+	EXPECT_EQ(cleanZeros(args, 1), "0");
+	EXPECT_EQ(cleanZeros(args, 2), "0");
+	EXPECT_EQ(cleanZeros(args, 3), "0");
+	EXPECT_EQ(cleanZeros(args, 4), "123");
+	EXPECT_EQ(cleanZeros(args, 5), "-123");
+	EXPECT_EQ(cleanZeros(args, 6), "4");
+	EXPECT_EQ(cleanZeros(args, 7), "-5");
+	EXPECT_EQ(cleanZeros(args, 8), "-9");
+	EXPECT_EQ(cleanZeros(args, 9), "7");
+	EXPECT_EQ(cleanZeros(args, 10), "10000");
+	EXPECT_EQ(cleanZeros(args, 11), "-10000");
+}
+
 TEST(HelperFunctions, twosComplement) {
 	EXPECT_EQ(twosComplement("20"), "80");
 	EXPECT_EQ(twosComplement("5"), "5");
@@ -292,8 +309,45 @@ TEST(Operations, Random) {
 	EXPECT_EQ(Operation(Sum, 3, txt01), "469");
 }
 
-TEST(DC, TestyZDiscorda) {
+TEST(HelperFunctions, addZerosToMatch) {
+	EXPECT_EQ(addZerosToMatch("9", "10"), "09");
+	EXPECT_EQ(addZerosToMatch("9", "100"), "009");
+	EXPECT_EQ(addZerosToMatch("3", "543"), "003");
+	EXPECT_EQ(addZerosToMatch("984", "123"), "984");
+	EXPECT_EQ(addZerosToMatch("6813", "13"), "6813");
+	EXPECT_EQ(addZerosToMatch("6813", "99999"), "06813");
+}
 
+TEST(Everything, LosoweTestyDajcieMiZieloneProsze) {
+
+	string arr01[] = {"-1234", "+1234"};
+	const string* txt01 = &arr01[0];
+	EXPECT_EQ(Sum(2, arr01), "0");
+
+	string arr02[] = {"-123", "+123"};
+	const string* txt02 = &arr02[0];
+	EXPECT_EQ(Sum(2, arr02), "0");
+
+	string arr03[] = {"+123", "-123"};
+	const string* txt03 = &arr03[0];
+	EXPECT_EQ(Sum(2, arr03), "0");
+
+	string arr04[] = {"1234", "-1233"};
+	const string* txt04 = &arr04[0];
+	EXPECT_EQ(Sum(2, arr04), "1");
+
+	string arr05[] = {"0", "-1233"};
+	const string* txt05 = &arr05[0];
+	EXPECT_EQ(Sum(2, arr05), "-1233");
+
+	string arr06[] = {"0", "0"};
+	const string* txt06 = &arr06[0];
+	EXPECT_EQ(Sum(2, arr06), "0");
+	
+	string arr07[] = {"00000", "00000"};
+	const string* txt07 = &arr07[0];
+	EXPECT_EQ(Sum(2, arr07), "0");
+	
 	EXPECT_EQ(Sum(2, "-1234", "+1234"), "0");
 	EXPECT_EQ(Sum(2, "-123", "+123"), "0");
 	EXPECT_EQ(Sum(2, "+123", "-123"), "0");
@@ -306,208 +360,47 @@ TEST(DC, TestyZDiscorda) {
 	EXPECT_EQ(Mult(2, "00000", "00000"), "0");
 	EXPECT_EQ(Sum(2, "00000", "00000"), "0");
 
-	const string* napis; 
-	
-	
-	string arr0[] = {"2386000", "000000000000006970000" };  
-	napis = &arr0[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr1[] = {"-00000000000002862168", "-0000000000000000000000000000645268" };  
-	napis = &arr1[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr2[] = {"-0000000000009615600", "000000000000942613" };  
-	napis = &arr2[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr3[] = {"0000000000000009268733", "+0000000000000000000007009353" };  
-	napis = &arr3[0]; 
-	 cout << Sum(2, napis) << endl;  
+	EXPECT_EQ(Sum(2, "0000000000000000000000001763153", "-00000000000005104102"), "-3340949");
+	EXPECT_EQ(Mult(2, "0000000000000000000000001763153", "-00000000000005104102"), "-8999312753606");
 
-//	string arr04[] = {"-7847168", "7204296" };  
-//	napis = &arr04[0]; 
-//	 cout << Sum(2, napis) << endl;  
+	string arr08[] = {"-0", "1234"};
+	const string* txt08 = &arr08[0];
+	EXPECT_EQ(Sum(2, arr08), "1234");
 	
-	string arr4[] = {"-07847168", "0000000000000000000007204296" };  
-	napis = &arr4[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr5[] = {"+0000000002623285", "000000000000000008505699" };  
-	napis = &arr5[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr6[] = {"00000000000000000000000009232190", "+0000000000000005211062" };  
-	napis = &arr6[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr7[] = {"-0000000000000000000000009884374", "+0000000000000000000000000000005123623" };  
-	napis = &arr7[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr8[] = {"-0000009958789", "0000000000000009843224" };  
-	napis = &arr8[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr9[] = {"+000000008601067", "0000000005967869" };  
-	napis = &arr9[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr10[] = {"000000000000000000000000007250418", "0003291052" };  
-	napis = &arr10[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr11[] = {"000000000000000000006860647", "-0000000000000000000000000000003766544" };  
-	napis = &arr11[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr12[] = {"-0000000000000000000000000000004848012", "+000000000000000000351156" };  
-	napis = &arr12[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr13[] = {"-003326787", "0000000000000000000000009200629" };  
-	napis = &arr13[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr14[] = {"+00000000000000000000000000005464560", "000000000000000004388852" };  
-	napis = &arr14[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr15[] = {"-00000000000000000000000006917485", "0000000000005550544" };  
-	napis = &arr15[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr16[] = {"0000000000000000000000000000003991481", "+00000000000000000000009170177" };  
-	napis = &arr16[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr17[] = {"-00000000000000000000000000005258243", "0000000007570867" };  
-	napis = &arr17[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr18[] = {"+0000000000000000000003506784", "000000000000000009753223" };  
-	napis = &arr18[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr19[] = {"+0000000000000000001321230", "-00000000000007401996" };  
-	napis = &arr19[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr20[] = {"+00000008630837", "0000000000000000000005766419" };  
-	napis = &arr20[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr21[] = {"0000000000000000000000001763153", "-00000000000005104102" };  
-	napis = &arr21[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr22[] = {"+0000000000000000000000000000001029323", "00000000000000000006374057" };  
-	napis = &arr22[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr23[] = {"+00000000000000000000000003346605", "00000000000006531460" };  
-	napis = &arr23[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr24[] = {"0000000000000003213001", "000000004182414" };  
-	napis = &arr24[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr25[] = {"000000000000000003666294", "2129099" };  
-	napis = &arr25[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr26[] = {"+000000000000000000000000009849278", "0000000000008373538" };  
-	napis = &arr26[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr27[] = {"000009842271", "001810397" };  
-	napis = &arr27[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr28[] = {"000000000009021643", "0000000000000005333547" };  
-	napis = &arr28[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr29[] = {"+00000000000000000000007963682", "+0000000000000000000002849112" };  
-	napis = &arr29[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr30[] = {"+000000000000000000000002331276", "+00000000000000000007174007" };  
-	napis = &arr30[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr31[] = {"+007130796", "00003299627" };  
-	napis = &arr31[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr32[] = {"0000000000000000006356747", "+00000000000000000001591900" };  
-	napis = &arr32[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr33[] = {"+0345590", "00000006758793" };  
-	napis = &arr33[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr34[] = {"-00000000000000003468653", "00078795" };  
-	napis = &arr34[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr35[] = {"000000000000000001343848", "008867184" };  
-	napis = &arr35[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr36[] = {"5169006", "0000000288907" };  
-	napis = &arr36[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr37[] = {"00000000000000000000006381742", "000000000000000000000380925" };  
-	napis = &arr37[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr38[] = {"-0000000000000000000001590234", "-000009436162" };  
-	napis = &arr38[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr39[] = {"+00000000002911455", "00000000007857297" };  
-	napis = &arr39[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr40[] = {"+0000002019129", "0000000000000000000000007506938" };  
-	napis = &arr40[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr41[] = {"+00000000000000000000000003354120", "000000000000000005061651" };  
-	napis = &arr41[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr42[] = {"03731504", "00000000000000000000000006702077" };  
-	napis = &arr42[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr43[] = {"000000000005020849", "-07359939" };  
-	napis = &arr43[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr44[] = {"-00000006217924", "-07377647" };  
-	napis = &arr44[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr45[] = {"-0000000000009539936", "-00000000000007511327" };  
-	napis = &arr45[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr46[] = {"000000000000000000000008022783", "-000000000000000000000000000008893526" };  
-	napis = &arr46[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr47[] = {"+000000000000000693187", "0006381174" };  
-	napis = &arr47[0]; 
-	 cout << Sum(2, napis) << endl;  
-	
-	string arr48[] = {"+000000000000000000000000555555", "+0003573505" };  
-	napis = &arr48[0]; 
-	 cout << Sum(2, napis) << endl;  
+	EXPECT_EQ(Sum(2, "100000000", "-1"), "99999999");
+	EXPECT_EQ(Sum(2, "-0", "1234"), "1234");
+	EXPECT_EQ(Sum(2, "0", "1234"), "1234");
+	EXPECT_EQ(Sum(3, "-0", "1234", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "0", "1234", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "0000000", "1234", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "0000000", "1234", "-0001233"), "1");
+	EXPECT_EQ(Sum(3, "0000000", "00001234", "-0001233"), "1");
+	EXPECT_EQ(Sum(3, "-0000000", "00001234", "-0001233"), "1");
+	EXPECT_EQ(Sum(3, "1234", "0", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "1234", "0", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "001234", "000", "-1233"), "1");
+	EXPECT_EQ(Sum(3, "1234", "0", "-001233"), "1");
+	EXPECT_EQ(Sum(3, "-1233", "1234", "0"), "1");
+	EXPECT_EQ(Sum(3, "0", "0", "0"), "0");
+	EXPECT_EQ(Sum(3, "00", "0", "000"), "0");
+	EXPECT_EQ(Sum(3, "-0", "-0", "-0"), "0");
+	EXPECT_EQ(Sum(3, "0", "-0", "0"), "0");
+	EXPECT_EQ(Sum(3, "1", "1", "1"), "3");
+	EXPECT_EQ(Sum(3, "1", "1", "-2"), "0");
+	EXPECT_EQ(Sum(3, "0", "0", "1"), "1");
+	EXPECT_EQ(Sum(3, "600017000939", "0", "60003400046005"), "60603417046944");
+	EXPECT_EQ(Sum(3, "+600017000939", "+0", "60003400046005"), "60603417046944");
+	EXPECT_EQ(Mult(3, "+600017000939", "+1", "60003400046005"), "36003060141746974728198695");
+	EXPECT_EQ(Mult(3, "+00600017000939", "+01", "060003400046005"), "36003060141746974728198695");
+	EXPECT_EQ(Mult(3, "+00600017000939", "+00", "060003400046005"), "0");
+	EXPECT_EQ(Sum(3, "-0", "1", "0"), "1");
+	EXPECT_EQ(Sum(3, "-0", "1", "-2"), "-1");
+	EXPECT_EQ(Sum(3, "-0", "-1", "2"), "1");
+	EXPECT_EQ(Sum(3, "-0", "-0", "02"), "2");
+	EXPECT_EQ(Sum(3, "-0", "0", "02"), "2");
+	EXPECT_EQ(Sum(3, "-0", "-0", "-0"), "0");
+	EXPECT_EQ(Mult(3, "-0", "-0", "-0"), "0");
+	EXPECT_EQ(Mult(4, "-0", "-0", "-0", "-0"), "0");
 }
 
 
