@@ -73,6 +73,46 @@ public:
 
 };
 
+FAD operator+(double value, const FAD& rhs) {
+	FAD ret(rhs.val + value, rhs.dx, rhs.dy, rhs.dxdx, rhs.dxdy, rhs.dydy);
+	return ret;
+}
+
+FAD operator+(const FAD& lhs, double value) {
+	FAD ret(lhs.val + value, lhs.dx, lhs.dy, lhs.dxdx, lhs.dxdy, lhs.dydy);
+	return ret;
+}
+
+FAD operator-(double value, const FAD& rhs) {
+	FAD ret(rhs.val - value, rhs.dx, rhs.dy, rhs.dxdx, rhs.dxdy, rhs.dydy);
+	return ret;
+}
+
+FAD operator-(const FAD& lhs, double value) {
+	FAD ret(lhs.val - value, lhs.dx, lhs.dy, lhs.dxdx, lhs.dxdy, lhs.dydy);
+	return ret;
+}
+
+FAD operator*(double value, const FAD& rhs) {
+	FAD ret(rhs.val * value, rhs.dx, rhs.dy, rhs.dxdx, rhs.dxdy, rhs.dydy);
+	return ret;
+}
+
+FAD operator*(const FAD& lhs, double value) {
+	FAD ret(lhs.val * value, lhs.dx, lhs.dy, lhs.dxdx, lhs.dxdy, lhs.dydy);
+	return ret;
+}
+
+FAD operator/(double value, const FAD& rhs) {
+	FAD ret(rhs.val / value, rhs.dx, rhs.dy, rhs.dxdx, rhs.dxdy, rhs.dydy);
+	return ret;
+}
+
+FAD operator/(const FAD& lhs, double value) {
+	FAD ret(lhs.val / value, lhs.dx, lhs.dy, lhs.dxdx, lhs.dxdy, lhs.dydy);
+	return ret;
+}
+
 void testCase(int x, int y) {
 	FAD fad_x(x, 1, 0, 0, 0, 0);
 	FAD fad_y(y, 0, 1, 0, 0, 0);
