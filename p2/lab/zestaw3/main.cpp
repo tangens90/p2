@@ -1,4 +1,5 @@
-// TODO link do githuba
+// link do repozytorium:
+// https://github.com/tangens90/homework/tree/main/p2/lab/zestaw3
 
 #include <regex>
 #include <iostream>
