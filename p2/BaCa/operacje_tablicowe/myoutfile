@@ -1,0 +1,496 @@
+test 0...	[32mok[0m[Ktest 1...	[32mok[0m[Ktest 2...	[32mok[0m[Ktest 3...	[32mok[0m[Ktest 4...	[32mok[0m[Ktest 5...	[31mfailed[0m
+input:
+AFR 1 7
+AFR 1 3
+AFR 1 1
+ALR 1 2
+PRT
+END
+your output:
+4
+1 1
+1 3
+1 2
+1 7
+expected output:
+4
+1 1
+1 3
+1 7
+1 2
+test 6...	[32mok[0m[Ktest 7...	[32mok[0m[Ktest 8...	[31mfailed[0m
+input:
+ALR 1 7
+ALR 1 3
+ALR 1 1
+ALR 1 2
+ALR 3 99 99 99
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+5
+1 7
+1 3
+1 1
+1 2
+3 99 99 99
+test 9...	[31mfailed[0m
+input:
+AFR 3 5 6 7
+ALR 2 1 2
+PRT
+END
+your output:
+2
+2 1 2
+3 5 6 7
+expected output:
+2
+3 5 6 7
+2 1 2
+test 10...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+AFC 2 5 4
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 5 3 3 3
+3 4 1 2
+4 9 9 7 6
+test 11...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+AFC 1 8
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 8 3 3 3
+2 1 2
+4 9 9 7 6
+test 12...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+AFC 4 8 5 3 1
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+4
+4 8 3 3 3
+3 5 1 2
+5 3 9 9 7 6
+1 1
+test 13...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+ALC 2 5 4
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 3 3 3 5
+3 1 2 4
+4 9 9 7 6
+test 14...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+ALC 1 8
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 3 3 3 8
+2 1 2
+4 9 9 7 6
+test 15...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+ALC 4 8 5 3 1
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+4
+4 3 3 3 8
+3 1 2 5
+5 9 9 7 6 3
+1 1
+test 16...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+SWR 0 1
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+2 1 2
+3 3 3 3
+4 9 9 7 6
+test 17...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+SWR 0 2
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 9 9 7 6
+2 1 2
+3 3 3 3
+test 18...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+SWR 2 0
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 9 9 7 6
+2 1 2
+3 3 3 3
+test 19...	[31mfailed[0m
+input:
+ALR 3 3 3 3
+ALR 2 1 2
+ALR 4 9 9 7 6
+SWR 2 3
+PRT
+END
+your output:
+realloc(): invalid old size
+expected output:
+3
+3 3 3 3
+2 1 2
+4 9 9 7 6
+test 20...	[32mok[0m[Ktest 21...	[32mok[0m[Ktest 22...	[31mfailed[0m
+input:
+IBR 0 3 1 2 3
+PRT
+END
+your output:
+sadsa
+0
+expected output:
+0
+test 23...	[31mfailed[0m
+input:
+IBR 1 2 1 6
+PRT
+END
+your output:
+sadsa
+0
+expected output:
+0
+test 24...	[32mok[0m[Ktest 25...	[32mok[0m[Ktest 26...	[31mfailed[0m
+input:
+AFR 3 4 1 2
+AFR 3 1 5 8
+IBR 2 1 9
+PRT END
+your output:
+sadsa
+2
+3 1 5 8
+3 4 1 2
+expected output:
+2
+3 1 5 8
+3 4 1 2
+test 27...	[31mfailed[0m
+input:
+ALR 5 6 6 6 6 6
+AFC 4 1 1 1 1
+PRT END
+your output:
+expected output:
+4
+6 1 6 6 6 6 6
+1 1
+1 1
+1 1
+test 28...	[31mfailed[0m
+input:
+IAR 0 3 1 2 3
+PRT
+END
+your output:
+sadsa
+0
+expected output:
+0
+test 29...	[31mfailed[0m
+input:
+IAR 1 2 1 6
+PRT
+END
+your output:
+sadsa
+0
+expected output:
+0
+test 30...	[32mok[0m[Ktest 31...	[32mok[0m[Ktest 32...	[31mfailed[0m
+input:
+AFR 3 4 1 2
+AFR 3 1 5 8
+IAR 2 1 9
+PRT END
+your output:
+sadsa
+2
+3 1 5 8
+3 4 1 2
+expected output:
+2
+3 1 5 8
+3 4 1 2
+test 33...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 0 2 3 1
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 3 4 1 2
+3 1 1 7
+4 9 4 6 1
+test 34...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 1 2 3 5
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 3 1 2
+3 1 5 7
+4 9 4 6 1
+test 35...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 2 3 3 5 0
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 1 3 2
+3 1 7 5
+5 9 4 0 6 1
+test 36...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 3 3 3 5 0
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 0 1
+test 37...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 3 4 3 5 0 1
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+4
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 0 1
+1 1
+test 38...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 3 6 3 5 0 1 2 3
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+6
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 0 1
+1 1
+1 2
+1 3
+test 39...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IBC 1 6 3 5 0 1 2 3
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+6
+4 4 3 1 2
+3 1 5 7
+5 9 0 4 6 1
+1 1
+1 2
+1 3
+test 40...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 0 2 3 1
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 3 1 2
+3 1 1 7
+4 9 4 6 1
+test 41...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 1 2 3 5
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 1 3 2
+3 1 7 5
+4 9 4 6 1
+test 42...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 2 3 3 5 0
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 0 1
+test 43...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 3 3 3 5 0
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+3
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 1 0
+test 44...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 3 4 3 5 0 1
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+4
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 1 0
+1 1
+test 45...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 3 6 3 5 0 1 2 3
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+6
+4 4 1 2 3
+3 1 7 5
+5 9 4 6 1 0
+1 1
+1 2
+1 3
+test 46...	[31mfailed[0m
+input:
+ALR 3 4 1 2
+ALR 2 1 7 
+ALR 4 9 4 6 1
+IAC 1 6 3 5 0 1 2 3
+PRT END
+your output:
+realloc(): invalid old size
+expected output:
+6
+4 4 1 3 2
+3 1 7 5
+5 9 4 0 6 1
+1 1
+1 2
+1 3
