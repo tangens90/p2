@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// TODO czy w IBR r może być ujemny?
+
 int ccmp(const char* a, const char* b) {
 	int i;
 	for (i = 0; i < 3; i++) {
@@ -24,8 +26,10 @@ void moveColumnsRight(int* tab, int start, int end) {
 }
 
 void moveColumnsLeft(int* tab, int start, int end) {
+	//printf("d: %d %d\n", start, end);
 	int i;
 	for (i = end; i > start; i--) {
+		//printf("aaaaa\n");
 		// swap
 		int tmp = *(tab + i);
 		*(tab + i) = *(tab + start);
@@ -33,7 +37,7 @@ void moveColumnsLeft(int* tab, int start, int end) {
 	}
 }
 
-void moveColumnsDown(short unsigned int* tab, int start, int end) {
+void moveColumnsDown(unsigned short* tab, int start, int end) {
 	//moveColumnsRight(tab, start, end);
 	int i;
 	for (i = start; i < end; i++) {
@@ -44,7 +48,7 @@ void moveColumnsDown(short unsigned int* tab, int start, int end) {
 	}
 }
 
-void moveColumnsUp(short unsigned int* tab, int start, int end) {
+void moveColumnsUp(unsigned short* tab, int start, int end) {
 	//moveColumnsLeft(tab, start, end);
 	int i;
 	for (i = end; i > start; i--) {
@@ -81,6 +85,28 @@ void writeToArray(int* tab, int n) {
 		scanf("%d", &e);
 		*(tab + i) = e;
 	}
+}
+
+void removeEmptyRows(int** tab, unsigned short* cols, unsigned short* rows) {
+	int tmp_rows = *rows;
+	int last_empty = 0;
+	int i;
+	for (i = 0; i < *rows; i++) {
+		if (*(cols + i) == 0) {
+			tmp_rows--;
+			//printf("pusty %d\n", i);
+		}
+		else {
+			if (i != last_empty) {
+				*(tab + last_empty) = *(tab + i);
+				*(cols + last_empty) = *(cols + i);
+			}
+			last_empty++;
+		}
+	}
+	tab = realloc(tab, tmp_rows * sizeof(*tab));
+	cols = realloc(cols, tmp_rows * sizeof(*cols));
+	*rows = tmp_rows;
 }
 
 int main() {
@@ -207,20 +233,50 @@ int main() {
 			if (ccmp(op, "DFR"))
 				r = 0;
 			else if (ccmp(op, "DLR"))
-				r = 2147483647;
+				r = rows - 1;
 			else if (ccmp(op, "RMR"))
 				scanf("%d", &r);
 
-			int tmp_r = r;
-			if (rows < r) 
-				tmp_r = rows - 1;
+			if (rows == 0)
+				continue;
+
+			if (r > rows - 1)
+				continue;
 				
-			free(*(tab + tmp_r));
+			free(*(tab + r));
 			rows--;
-			moveRowsUp(tab, tmp_r, rows);
+			moveRowsUp(tab, r, rows);
 			tab = realloc(tab, rows * sizeof(*tab));
-			moveColumnsUp(cols, tmp_r, rows);
+			moveColumnsUp(cols, r, rows);
 			cols = realloc(cols, rows * sizeof(*cols));
+		}
+		else if (ccmp(op, "DFC") || ccmp(op, "DLC") || ccmp(op, "RMC")) {
+			int c, org_c;
+			
+			if (ccmp(op, "DFC"))
+				org_c = 0;
+			else if (ccmp(op, "DLC"))
+				org_c = 2147483647;
+			else if (ccmp(op, "RMC"))
+				scanf("%d", &org_c);
+
+			if (rows == 0)
+				continue;
+
+			int i;
+			for (i = 0; i < rows; i++) {
+				//moveColumnsRight(*(tab + i), *(cols + i), c);
+				//printf("%d\n", c);
+				c = org_c;
+				if (*(cols + i) < c && ccmp(op, "DLC")) 
+					c = *(cols + i);
+				else if (*(cols + i) <= c && ccmp(op, "RMC"))
+					continue;
+				moveColumnsLeft(*(tab + i), c, *(cols + i) - 1);
+				*(tab + i) = realloc(*(tab + i), (*(cols + i) - 1) * sizeof(*(tab + i)));
+				*(cols + i) = *(cols + i) - 1;
+			}
+			removeEmptyRows(tab, cols, &rows);
 		}
 		else if (ccmp(op, "PRT")) {
 			printf("%d\n", rows);
@@ -245,8 +301,10 @@ int main() {
 	for (i = 0; i < rows; i++) {
 		free(*(tab + i));
 	}
-	free(tab);
-	free(cols);
+	if (rows != 0) {
+		free(tab);
+		free(cols);
+	}
 	free(op);
 	return 0;
 }

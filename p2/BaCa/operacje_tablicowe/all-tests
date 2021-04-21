@@ -743,3 +743,418 @@ PRT END
 2
 1 5
 3 1 2 3
+---
+ALR 1 1
+DFR
+DFR
+PRT END
+---
+0
+---
+ALR 1 1
+DLR
+DLR
+PRT END
+---
+0
+---
+ALR 1 1
+RMR 0
+RMR 0
+PRT END
+---
+0
+---
+ALR 1 1
+RMR 0
+RMR 5
+PRT END
+---
+0
+---
+ALR 1 1
+DLR
+PRT END
+---
+0
+---
+ALR 1 1
+RMR 3
+PRT END
+---
+1
+1 1
+---
+ALR 1 1
+RMR 1
+PRT END
+---
+1
+1 1
+---
+ALR 1 1
+RMR 2
+PRT END
+---
+1
+1 1
+---
+ALR 3 1 2 3
+DFC
+PRT END
+---
+1
+2 2 3
+---
+ALR 3 1 2 3
+DFC
+DFC
+PRT END
+---
+1
+1 3
+---
+ALR 3 1 2 3
+DFC
+DFC
+DFC
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DFC
+PRT END
+---
+3
+2 2 3
+1 5
+3 8 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 1 1
+ALR 1 1
+ALR 1 1
+ALR 1 6
+ALR 4 7 8 9 0
+DFC
+PRT END
+---
+3
+2 2 3
+1 5
+3 8 9 0
+---
+ALR 1 1
+DFC
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DFC
+DFC
+PRT END
+---
+2
+1 3
+2 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DFC
+DFC
+DFC
+PRT END
+---
+1
+1 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DFC
+DFC
+DFC
+DFC
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+DLC
+PRT END
+---
+1
+2 1 2
+---
+ALR 3 1 2 3
+DLC
+DLC
+PRT END
+---
+1
+1 1
+---
+ALR 3 1 2 3
+DLC
+DLC
+DLC
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DLC
+PRT END
+---
+3
+2 1 2
+1 4
+3 7 8 9
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 1 1
+ALR 1 1
+ALR 1 1
+ALR 1 6
+ALR 4 7 8 9 0
+DLC
+PRT END
+---
+3
+2 1 2
+1 4
+3 7 8 9
+---
+ALR 1 1
+DLC
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DLC
+DLC
+PRT END
+---
+2
+1 1
+2 7 8
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DLC
+DLC
+DLC
+PRT END
+---
+1
+1 7
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+DLC
+DLC
+DLC
+DLC
+PRT END
+---
+0
+---
+aaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ALR 3 1 2 3
+RMC 0
+PRT END
+---
+1
+2 2 3
+---
+ALR 3 1 2 3
+RMC 1
+PRT END
+---
+1
+2 1 3
+---
+ALR 3 1 2 3
+RMC 2
+PRT END
+---
+1
+2 1 2
+---
+ALR 3 1 2 3
+RMC 3
+PRT END
+---
+1
+3 1 2 3
+---
+ALR 3 1 2 3
+RMC 4
+PRT END
+---
+1
+3 1 2 3
+---
+ALR 3 1 2 3
+RMC 10
+PRT END
+---
+1
+3 1 2 3
+---
+ALR 3 1 2 3
+RMC 0
+RMC 0
+PRT END
+---
+1
+1 3
+---
+ALR 3 1 2 3
+RMC 1
+RMC 0
+PRT END
+---
+1
+1 3
+---
+ALR 3 1 2 3
+RMC 2
+RMC 1
+RMC 0
+PRT END
+---
+0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 0
+PRT END
+---
+3
+2 2 3
+1 5
+3 8 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 1
+PRT END
+---
+4
+2 1 3
+1 4
+1 6
+3 7 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 2
+PRT END
+---
+4
+2 1 2
+2 4 5
+1 6
+3 7 8 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 3
+PRT END
+---
+4
+3 1 2 3
+2 4 5
+1 6
+3 7 8 9
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 4
+PRT END
+---
+4
+3 1 2 3
+2 4 5
+1 6
+4 7 8 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 1 1
+ALR 1 1
+ALR 1 1
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 0
+PRT END
+---
+3
+2 2 3
+1 5
+3 8 9 0
+---
+ALR 3 1 2 3
+ALR 2 4 5
+ALR 1 6
+ALR 1 1
+ALR 1 1
+ALR 1 1
+ALR 1 6
+ALR 4 7 8 9 0
+RMC 1
+PRT END
+---
+8
+2 1 3
+1 4
+1 6
+1 1
+1 1
+1 1
+1 6
+3 7 9 0
+---
+ALR 1 1
+RMC 0
+PRT END
+---
+0
