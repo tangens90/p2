@@ -13,16 +13,6 @@ int ccmp(const char* a, const char* b) {
 	return 1;
 }
 
-void moveColumnsDown(short unsigned int* tab, int start, int end) {
-	int i;
-	for (i = start; i < end; i++) {
-		// swap
-		int tmp = *(tab + i);
-		*(tab + i) = *(tab + end);
-		*(tab + end) = tmp;
-	}
-}
-
 void moveColumnsRight(int* tab, int start, int end) {
 	int i;
 	for (i = start; i < end; i++) {
@@ -33,6 +23,37 @@ void moveColumnsRight(int* tab, int start, int end) {
 	}
 }
 
+void moveColumnsLeft(int* tab, int start, int end) {
+	int i;
+	for (i = end; i > start; i--) {
+		// swap
+		int tmp = *(tab + i);
+		*(tab + i) = *(tab + start);
+		*(tab + start) = tmp;
+	}
+}
+
+void moveColumnsDown(short unsigned int* tab, int start, int end) {
+	//moveColumnsRight(tab, start, end);
+	int i;
+	for (i = start; i < end; i++) {
+		// swap
+		int tmp = *(tab + i);
+		*(tab + i) = *(tab + end);
+		*(tab + end) = tmp;
+	}
+}
+
+void moveColumnsUp(short unsigned int* tab, int start, int end) {
+	//moveColumnsLeft(tab, start, end);
+	int i;
+	for (i = end; i > start; i--) {
+		// swap
+		int tmp = *(tab + i);
+		*(tab + i) = *(tab + start);
+		*(tab + start) = tmp;
+	}
+}
 void moveRowsDown(int** tab, int start, int end) {
 	int i;
 	for (i = start; i < end; i++) {
@@ -40,6 +61,16 @@ void moveRowsDown(int** tab, int start, int end) {
 		int* tmp = *(tab + i);
 		*(tab + i) = *(tab + end);
 		*(tab + end) = tmp;
+	}
+}
+
+void moveRowsUp(int** tab, int start, int end) {
+	int i;
+	for (i = end; i > start; i--) {
+		// swap
+		int* tmp = *(tab + i);
+		*(tab + i) = *(tab + start);
+		*(tab + start) = tmp;
 	}
 }
 
@@ -154,6 +185,42 @@ int main() {
 			int tmp2 = *(cols + r);
 			*(cols + r) = *(cols + s);
 			*(cols + s) = tmp2;
+		}
+		else if (ccmp(op, "SWC")) {
+			int c, d;
+			scanf("%d %d", &c, &d);
+			int bigger = c > d ? c : d;
+			int i, swap;
+			for (i = 0; i < rows; i++) {
+				if (*(cols + i) < bigger + 1)
+					continue;
+
+				swap = *(*(tab + i) + c);
+				*(*(tab + i) + c) = *(*(tab + i) + d);
+				*(*(tab + i) + d) = swap;
+			}
+		}
+		else if (ccmp(op, "DFR") || ccmp(op, "DLR") ||
+				 ccmp(op, "RMR")) {
+			int r;
+
+			if (ccmp(op, "DFR"))
+				r = 0;
+			else if (ccmp(op, "DLR"))
+				r = 2147483647;
+			else if (ccmp(op, "RMR"))
+				scanf("%d", &r);
+
+			int tmp_r = r;
+			if (rows < r) 
+				tmp_r = rows - 1;
+				
+			free(*(tab + tmp_r));
+			rows--;
+			moveRowsUp(tab, tmp_r, rows);
+			tab = realloc(tab, rows * sizeof(*tab));
+			moveColumnsUp(cols, tmp_r, rows);
+			cols = realloc(cols, rows * sizeof(*cols));
 		}
 		else if (ccmp(op, "PRT")) {
 			printf("%d\n", rows);
