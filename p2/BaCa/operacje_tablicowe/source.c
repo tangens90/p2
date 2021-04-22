@@ -26,7 +26,6 @@ void moveColumnsRight(int* tab, int start, int end) {
 }
 
 void moveColumnsLeft(int* tab, int start, int end) {
-	//printf("d: %d %d\n", start, end);
 	int i;
 	for (i = end; i > start; i--) {
 		//printf("aaaaa\n");
@@ -68,6 +67,32 @@ void moveRowsDown(int** tab, int start, int end) {
 	}
 }
 
+void moveColsLeftMult(int* row, int start, int amt, short unsigned int* cols, int index) {
+	int to_place = start;
+	int end = start + amt - 1;
+	//printf("d: %d %d %d\n", start, amt, *len);
+	int i;
+	for (i = start + amt; i < *(cols + index); i++) {
+		*(row + to_place) = *(row + i);
+		to_place++;
+	}
+	if (start <= *(cols + index) - 1) {
+		if (end <= *(cols + index) - 1) {
+			(*(cols + index)) -= amt;
+		}
+		else {
+			(*(cols + index)) = start;
+		}
+//		if (to_place - 1 <= *(cols + index))
+//			(*(cols + index)) -= to_place - 1 - start + 1;
+//		else
+//			*(cols + index) = start;
+	}
+	//*(cols + index) = *(cols + index) - start;
+	//*deleted = len - start;
+	//*len = *len - start;
+}
+
 void moveRowsUp(int** tab, int start, int end) {
 	int i;
 	for (i = end; i > start; i--) {
@@ -87,7 +112,7 @@ void writeToArray(int* tab, int n) {
 	}
 }
 
-void removeEmptyRows(int** tab, unsigned short* cols, unsigned short* rows) {
+/*void removeEmptyRows(int** tab, unsigned short* cols, unsigned short* rows) {
 	int tmp_rows = *rows;
 	int last_empty = 0;
 	int i;
@@ -107,18 +132,19 @@ void removeEmptyRows(int** tab, unsigned short* cols, unsigned short* rows) {
 	tab = realloc(tab, tmp_rows * sizeof(*tab));
 	cols = realloc(cols, tmp_rows * sizeof(*cols));
 	*rows = tmp_rows;
-}
+}*/
 
 int main() {
 	unsigned short rows = 0;
 	unsigned short* cols = NULL;
 	int** tab = NULL;
-	char* op = malloc(3 * sizeof(char));
+	char* op = malloc(4 * sizeof(char));
 	int end = 0;
 	int argc;
 
 	while (1) {
 		scanf("%s", op);
+		*(op + 3) = '\0';
 	 	if (ccmp(op, "IBR") || ccmp(op, "IAR") ||
 				 ccmp(op, "AFR") || ccmp(op, "ALR")) {
 			int r;
@@ -126,6 +152,9 @@ int main() {
 				scanf("%d %d", &r, &argc);
 			else
 				scanf("%d", &argc);
+
+			if (argc == 0)
+				continue;
 
 			if (ccmp(op, "AFR")) 
 				r = 0;
@@ -276,7 +305,62 @@ int main() {
 				*(tab + i) = realloc(*(tab + i), (*(cols + i) - 1) * sizeof(*(tab + i)));
 				*(cols + i) = *(cols + i) - 1;
 			}
-			removeEmptyRows(tab, cols, &rows);
+			//removeEmptyRows(tab, cols, &rows);
+			// TODO przenieść to poniżej do osobnej funkcji
+			int tmp_rows = rows;
+			int last_empty = 0;
+			//int i;
+			for (i = 0; i < rows; i++) {
+				if (*(cols + i) == 0) {
+					tmp_rows--;
+					//printf("pusty %d\n", i);
+				}
+				else {
+					if (i != last_empty) {
+						*(tab + last_empty) = *(tab + i);
+						*(cols + last_empty) = *(cols + i);
+					}
+					last_empty++;
+				}
+			}
+			tab = realloc(tab, tmp_rows * sizeof(*tab));
+			cols = realloc(cols, tmp_rows * sizeof(*cols));
+			rows = tmp_rows;
+		}
+		else if (ccmp(op, "RMB")) {
+			int r, h, c, w;
+			scanf("%d %d %d %d", &r, &h, &c, &w);
+
+			int i;
+			for (i = r; i < r + h; i++) {
+				if (i > rows - 1)
+					break;
+				moveColsLeftMult(*(tab + i), c, w, cols, i);
+			}
+			
+			//removeEmptyRows(tab, cols, &rows);
+			// TODO przenieść to poniżej do osobnej funkcji
+			int tmp_rows = rows;
+			int tmp_rows = rows;
+			int last_empty = 0;
+			//int i;
+			for (i = 0; i < rows; i++) {
+				if (*(cols + i) == 0) {
+					tmp_rows--;
+					//printf("pusty %d\n", i);
+				}
+				else {
+					if (i != last_empty) {
+						*(tab + last_empty) = *(tab + i);
+						*(cols + last_empty) = *(cols + i);
+					}
+					last_empty++;
+				}
+			}
+			tab = realloc(tab, tmp_rows * sizeof(*tab));
+			cols = realloc(cols, tmp_rows * sizeof(*cols));
+			rows = tmp_rows;
+
 		}
 		else if (ccmp(op, "PRT")) {
 			printf("%d\n", rows);
@@ -292,20 +376,20 @@ int main() {
 		}
 		else if (ccmp(op, "END")) {
 			end = 1;
+			int i;
+			for (i = 0; i < rows; i++) {
+				free(*(tab + i));
+			}
+			if (rows != 0) {
+				free(tab);
+				free(cols);
+			}
+			free(op);
 		}
 		if (end)
 			break;
 	}
 
-	int i;
-	for (i = 0; i < rows; i++) {
-		free(*(tab + i));
-	}
-	if (rows != 0) {
-		free(tab);
-		free(cols);
-	}
-	free(op);
 	return 0;
 }
 
