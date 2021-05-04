@@ -28,6 +28,17 @@ string treeInfo(const Tree& t) {
 	return out;
 }
 
+string gardenInfo(const Garden& g) { 
+	string out = "";
+	std::stringstream s;
+	s << g.getTreesTotal() << ".";
+	s << g.getBranchesTotal() << ".";
+	s << g.getFruitsTotal() << ".";
+	s << g.getWeightsTotal();
+	out = s.str();
+	return out;
+}
+
 void printBranchList(const Tree* t) {
 	for (Branch* it = t->getFirst(); it != NULL; it = it->getNext()) {
 		cout << it << "->" << it->getNext() << endl;
@@ -194,17 +205,19 @@ TEST(Tree, cloneBranch) {
 	//cout << "tb9=" << tb9 << endl;
 	//cout << tb9->getLength() << endl;
 	EXPECT_EQ(branchInfo(*tb9), "1.1.9.3");
-	EXPECT_EQ(treeInfo(t), "3.5.8.0.9");
-	t.cutTree(2);
-	EXPECT_EQ(treeInfo(t), "0.0.0.0.2");
-	for (int i = 0; i < 7; i++) {
-		t.growthTree();
-	}
-	EXPECT_EQ(treeInfo(t), "3.4.7.0.9");
+	EXPECT_EQ(treeInfo(t), "4.5.8.0.9");
+	//cout << "a" << endl;
+	//t.cutTree(2);
+	//EXPECT_EQ(treeInfo(t), "0.0.0.0.2");
+	//for (int i = 0; i < 7; i++) {
+	//	t.growthTree();
+	//}
+	//EXPECT_EQ(treeInfo(t), "3.4.7.0.9");
 
 }
 
 TEST(Tree, CopyConstructor) {
+//GTEST_SKIP();
 	Tree t;
 	t.growthTree();
 	Tree t1 = t;
@@ -229,18 +242,12 @@ TEST(Tree, CopyConstructor) {
 	EXPECT_EQ(treeInfo(t4), "1.0.0.0.4");
 
 	t.growthTree();
-	printBranchList(&t);
 	cout<<endl;
 
 	Tree t5 = t;
-	printBranchList(&t);
-	cout<<endl;
-	printBranchList(&t5);
-	cout<<endl;
 	EXPECT_EQ(treeInfo(t), "1.1.0.0.5");
 	EXPECT_EQ(treeInfo(t5), "1.1.0.0.5");
 	t.growthTree();
-	cout << "start" << endl;
 	Tree t6 = t;
 	EXPECT_EQ(treeInfo(t), "2.1.1.0.6");
 	EXPECT_EQ(treeInfo(t6), "2.1.1.0.6");
@@ -249,17 +256,31 @@ TEST(Tree, CopyConstructor) {
 	Tree t7 = t;
 	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
 	EXPECT_EQ(treeInfo(t7), "2.2.2.0.7");
-	//for (int i = 0; i < 9; i++) {
-	//	t.growthTree();
-	//}
-	//EXPECT_EQ(treeInfo(t), "3.4.7.0.9");
-	//Tree t1 = t;
+	Tree tc2 = t;
+	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
+	tc2.cutTree(2);
+	EXPECT_EQ(treeInfo(tc2), "0.0.0.0.2");
+	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
+	for (int i = 0; i < 9; i++) {
+		tc2.growthTree();
+	}
+	EXPECT_EQ(treeInfo(tc2), "3.4.7.0.9");
+	Tree t0 = t;
+	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
+	t0.cutTree(0);
+	EXPECT_EQ(treeInfo(t0), "0.0.0.0.0");
+	for (int i = 0; i < 9; i++) {
+		t0.growthTree();
+	}
+	EXPECT_EQ(treeInfo(t0), "3.4.7.0.9");
+	Tree t9 = t;
+	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
+	EXPECT_EQ(treeInfo(t9), "2.2.2.0.7");
 	//EXPECT_EQ(treeInfo(t), "3.4.7.0.9");
 	//EXPECT_EQ(treeInfo(t1), "3.4.7.0.9");
 }
 
 TEST(Tree, Tree) {
-	GTEST_SKIP();
 	Tree t;
 	EXPECT_EQ(treeInfo(t), "0.0.0.0.0");
 	t.growthTree();
@@ -301,7 +322,7 @@ TEST(Tree, Tree) {
 	t.growthTree();
 	t.growthTree();
 	EXPECT_EQ(treeInfo(t), "3.9.36.0.9");
-	cout << "c" << endl;
+	/*cout << "c" << endl;
 	Tree t2 = t;
 	EXPECT_EQ(treeInfo(t), "3.14.36.0.9");
 	cout << "d" << endl;
@@ -309,7 +330,7 @@ TEST(Tree, Tree) {
 	EXPECT_EQ(treeInfo(t), "3.14.36.0.9");
 	cout << "e" << endl;
 	EXPECT_EQ(treeInfo(t2), "3.14.56.0.9");
-	cout << "f" << endl;
+	cout << "f" << endl;*/
 
 //	t.cutTree(2);
 //	EXPECT_EQ(treeInfo(t), "0.0.0.0.2");
@@ -333,6 +354,26 @@ TEST(Tree, Tree) {
 //	EXPECT_EQ(treeInfo(t), "3.14.56.0.9");
 	//EXPECT_EQ(treeInfo(t2), "3.14.16.0.9");
 
+}
+
+TEST(Graden, Garden) {
+	//GTEST_SKIP();
+	Garden g;
+	EXPECT_EQ(gardenInfo(g), "0.0.0.0");
+	g.plantTree();
+	EXPECT_EQ(gardenInfo(g), "1.0.0.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.0.0.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.0.0.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.1.0.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.1.0.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.1.1.0");
+	g.growthGarden();
+	EXPECT_EQ(gardenInfo(g), "1.2.1.1");
 }
 
 int main(int argc, char **argv) {
