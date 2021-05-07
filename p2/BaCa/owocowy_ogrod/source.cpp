@@ -2,8 +2,8 @@
 
 #include <cstdlib>
 
-#include <iostream>
-using namespace std;
+//#include <iostream>
+//using namespace std;
 
 typedef unsigned int cint;
 
@@ -22,6 +22,8 @@ typedef unsigned int cint;
 #define getTreesTotal getWoodsTotal
 #define harvestTree harvestWood
 #define plantTree plantWood
+#define growthTree growthWood
+#define fadeTree fadeWood
 
 class Garden;
 class Tree;
@@ -119,6 +121,7 @@ private:
 public:
 	Tree();
 	Tree(cint, Garden*);
+	Tree(const Tree&, Garden*);
 	Tree(const Tree&);
 	~Tree();
 
@@ -169,7 +172,7 @@ public:
 	cint getFruitsTotal(void) const;
 	cint getWeightsTotal(void) const;
 	void plantTree(void);
-	void extractTree(void);
+	void extractTree(cint);
 	void growthGarden(void);
 	void fadeGarden(void);
 	void harvestGarden(cint);
@@ -430,8 +433,9 @@ Branch::Branch(const Branch& b, Tree* parent) {
 	// nie musimy tutaj aktualizować ilości owoców, bo konstruktor owocu zwiększa globalnie fruitAmt
 	//updateGlobalFruitAmt(b.fruitAmt);
 	//updateGlobalWeight(b.weightAmt, true);
+	//cout << "aktualizuje ilość gałęzi dla " << parent << endl;
 	updateGlobalBranchAmt(1, true);
-	cout << "moja gałąź ma owoców =" << b.fruitAmt << endl;
+	//cout << "moja gałąź ma owoców =" << b.fruitAmt << endl;
 
 	fruitAmt = b.fruitAmt;
 	if (fruitAmt > 0) {
@@ -691,7 +695,7 @@ Tree::Tree() {
 }
 
 Tree::Tree(cint id, Garden* g) {
-	id = id;
+	this->id = id;
 	height = 0;
 	fruitAmt = 0;
 	branchAmt = 0;
@@ -705,6 +709,44 @@ Tree::Tree(cint id, Garden* g) {
 }
 
 Tree::Tree(const Tree& t) {
+	//cout << "teraz odpalam się" << endl;
+	// TODO każda zmiana również niżej!!!!
+	id = t.id;
+	height = t.height;
+	fruitAmt = 0;
+	weight = 0;
+	garden = t.garden;
+	first = NULL;
+	last = NULL;
+	next = t.getNext();
+	prev = t.getPrev();
+	updateGlobalTreesAmt(1, true);
+
+	branchAmt = t.branchAmt;
+	if (branchAmt > 0) {
+		branchAmt = 0;
+		first = new Branch(*t.first, this);
+		last = first;
+
+		Branch* it = first;
+		Branch* itB = t.first->getNext();
+	
+		while (itB != NULL) {
+			it->setNext(new Branch(*itB, this));
+
+			it = it->getNext();
+			itB = itB->getNext();
+
+			last = it;
+		}
+
+		last->setNext(NULL);
+	}
+}
+
+Tree::Tree(const Tree& t, Garden* g) {
+	//cout << "odpalam się" << endl;
+	// TODO każda zmiana również wyżej!!!!
 	id = t.id;
 	height = t.height;
 	//fruitAmt = t.fruitAmt;
@@ -712,7 +754,7 @@ Tree::Tree(const Tree& t) {
 	// TODO tu będzie problem z ilością branchy
 	//weight = t.weight;
 	weight = 0;
-	garden = t.garden;
+	garden = g;
 	first = NULL;
 	last = NULL;
 	next = t.getNext();
@@ -738,7 +780,7 @@ Tree::Tree(const Tree& t) {
 		while (itB != NULL) {
 			//cout << itB << endl;
 			it->setNext(new Branch(*itB, this));
-			cout << "owoców po iteracji: " <<  this->getFruitsTotal() << endl;
+			//cout << "owoców po iteracji: " <<  this->getFruitsTotal() << endl;
 			//cout << it->getFruitsTotal() << endl;
 			//it->setNext(new Branch(height, this));
 
@@ -754,7 +796,7 @@ Tree::Tree(const Tree& t) {
 
 		last->setNext(NULL);
 	}
-	cout << "owoców ostatecznie: " <<  this->getFruitsTotal() << endl;
+	//cout << "owoców ostatecznie: " <<  this->getFruitsTotal() << endl;
 
 	// TODO aktualizować ilosć owoców itd
 	// nie trzeba, bo Branch już wszystko aktualizuje
@@ -1118,6 +1160,179 @@ void Garden::plantTree(void) {
 void Garden::growthGarden(void) {
 	for (Tree* it = first; it != NULL; it = it->getNext()) {
 		it->growthTree();
+	}
+}
+
+void Garden::extractTree(cint n) {
+	if (treesAmt == 0)
+		return;
+
+	if (n == last->getNumber()) {
+		Tree* tmp = last;
+		if (first == last) {
+			first = last = NULL;
+		}
+		else {
+			last = last->getPrev();
+			last->setNext(NULL);
+		}
+
+		delete tmp;
+	}
+	else if (n < last->getNumber()) {
+		Tree* it = first;
+		Tree* prev = NULL;
+
+		while (it->getNext() != NULL) {
+			if (it->getNumber() == n) {
+				break;
+			}
+			prev = it;
+			it = it->getNext();
+		}
+
+		if (it->getNumber() == n) {
+			if (it == first && it == last) {
+				first = last = NULL;
+				potentialGaps = 0;
+			}
+			else if (it == first) {
+				first = first->getNext();
+				first->setPrev(NULL);
+				potentialGaps++;
+			}
+			else if (it == last) {
+				last = prev;
+				last->setNext(NULL);
+			}
+			else {
+				prev->setNext(it->getNext());
+				it->getNext()->setPrev(prev);
+				potentialGaps++;
+			}
+
+			delete it;
+		}
+	}
+}
+
+void Garden::fadeGarden(void) {
+	for (Tree* it = first; it != NULL; it = it->getNext()) {
+		it->fadeTree();
+	}
+}
+
+void Garden::harvestGarden(cint n) {
+	for (Tree* it = first; it != NULL; it = it->getNext()) {
+		it->harvestTree(n);
+	}
+}
+
+Tree* Garden::getTreePointer(cint n) {
+	if (treesAmt == 0) {
+		return NULL;
+	}
+
+	if (n > last->getNumber()) {
+		return NULL;
+	}
+
+	if (n == last->getNumber()) {
+		return last;
+	}
+	// n < last->getNumber()
+	for (Tree* it = first; it != NULL; it = it->getNext()) {
+		if (it->getNumber() == n) {
+			return it;
+		}
+		else if (it->getNumber() > n) {
+			// raczej bez sensu, ale niech będzie
+			return NULL;
+		}
+	}
+	return NULL;
+}
+
+void Garden::cloneTree(cint x) {
+	if (treesAmt == 0)
+		return;
+
+	if (x > last->getNumber())
+		return;
+
+	Tree* it = first;
+	Tree* it2 = last;
+	// znaleziony element do skopiowania
+	Tree* X = NULL;
+	// miejsce za którym wstawiamy
+	// chyba że beforeData == true, wtedy wstawiamy przed
+	Tree* A = NULL;
+	
+	bool beforeData = false;
+	if (potentialGaps == 0)
+		A = last;
+	else if (first->getNumber() > 0) {
+		beforeData = true;
+		A = first;
+	}
+
+	if (last->getNumber() == x)
+		X = last;
+
+	while (it != NULL && it2 != NULL && (X == NULL || A == NULL)) {
+		if (X == NULL && it->getNumber() == x) {
+			X = it;
+		}
+		else if (X == NULL && it2->getNumber() == x) {
+			X = it2;
+		}
+		else if (X == NULL && it->getNumber() >= it2->getNumber()) {
+			break;
+		}
+
+		if (A == NULL && it == last) {
+			A = it;
+		}
+		else if (A == NULL) {
+			if (it->getNumber() + 1 < it->getNext()->getNumber()) {
+				A = it;
+			}
+		}
+
+		it = it->getNext();
+		it2 = it2->getPrev();
+	}
+
+	if (X != NULL) {
+		if (beforeData) {
+			A = new Tree(*X, this);
+			A->setNext(first);
+			A->setPrev(NULL);
+			first->setPrev(A);
+			A->setNumber(0);
+			first = A;
+			potentialGaps--;
+		}
+		else {
+			Tree* tmp = A->getNext();
+			A->setNext(new Tree(*X, this));
+			A->getNext()->setPrev(A);
+			A->getNext()->setNumber(A->getNumber() + 1);
+			if (tmp != NULL) {
+				tmp->setPrev(A->getNext());
+			}
+			else {
+				last = A->getNext();
+			}
+			A->getNext()->setNext(tmp);
+
+			if (A == last) {
+				potentialGaps = 0;
+			}
+			else if (potentialGaps > 0) {
+				potentialGaps--;
+			}
+		}
 	}
 }
 

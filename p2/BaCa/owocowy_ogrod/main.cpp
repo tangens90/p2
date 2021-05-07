@@ -190,7 +190,7 @@ TEST(Branch, Branch) {
 }
 
 TEST(Tree, cloneBranch) {
-	GTEST_SKIP();
+	//GTEST_SKIP();
 	Tree t;
 	for (int i = 0; i < 9; i++) {
 		t.growthTree();
@@ -204,8 +204,9 @@ TEST(Tree, cloneBranch) {
 	//cout << tb9->getLength() << endl;
 	//cout << "tb9=" << tb9 << endl;
 	//cout << tb9->getLength() << endl;
+	cout << "drzewo " << &t << endl;
+	EXPECT_EQ(treeInfo(t), "3.5.8.0.9");
 	EXPECT_EQ(branchInfo(*tb9), "1.1.9.3");
-	EXPECT_EQ(treeInfo(t), "4.5.8.0.9");
 	//cout << "a" << endl;
 	//t.cutTree(2);
 	//EXPECT_EQ(treeInfo(t), "0.0.0.0.2");
@@ -220,6 +221,7 @@ TEST(Tree, CopyConstructor) {
 //GTEST_SKIP();
 	Tree t;
 	t.growthTree();
+	cout << "===============" << endl;
 	Tree t1 = t;
 	EXPECT_EQ(treeInfo(t), "0.0.0.0.1");
 	EXPECT_EQ(treeInfo(t1), "0.0.0.0.1");
@@ -258,13 +260,14 @@ TEST(Tree, CopyConstructor) {
 	EXPECT_EQ(treeInfo(t7), "2.2.2.0.7");
 	Tree tc2 = t;
 	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
+	EXPECT_EQ(treeInfo(tc2), "2.2.2.0.7");
 	tc2.cutTree(2);
 	EXPECT_EQ(treeInfo(tc2), "0.0.0.0.2");
 	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
 	for (int i = 0; i < 9; i++) {
 		tc2.growthTree();
 	}
-	EXPECT_EQ(treeInfo(tc2), "3.4.7.0.9");
+	EXPECT_EQ(treeInfo(tc2), "3.7.16.0.11");
 	Tree t0 = t;
 	EXPECT_EQ(treeInfo(t), "2.2.2.0.7");
 	t0.cutTree(0);
@@ -374,6 +377,93 @@ TEST(Graden, Garden) {
 	EXPECT_EQ(gardenInfo(g), "1.1.1.0");
 	g.growthGarden();
 	EXPECT_EQ(gardenInfo(g), "1.2.1.1");
+}
+
+TEST(Garden, Garden) {
+	GARDEN_CLASS garden = GARDEN_CLASS();
+
+	garden.plantWood();
+	garden.plantWood();
+	garden.plantWood();
+
+	EXPECT_EQ(gardenInfo(garden), "3.0.0.0");
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(0)), "0.0.0.0.0");
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(1)), "0.0.0.1.0");
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(2)), "0.0.0.2.0");
+
+	WOOD_CLASS* cloned = garden.getWoodPointer(0);
+	cloned->growthWood();
+	cloned->growthWood();
+	cloned->growthWood();
+
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(0)), "1.0.0.0.3");
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(1)), "0.0.0.1.0");
+	EXPECT_EQ(treeInfo(*garden.getTreePointer(2)), "0.0.0.2.0");
+
+	EXPECT_EQ(gardenInfo(garden), "3.1.0.0");
+
+	garden.cloneWood(0);
+	EXPECT_EQ(gardenInfo(garden), "4.2.0.0");
+
+	garden.getWoodPointer(3)->growthWood();
+	garden.getWoodPointer(3)->growthWood();
+	EXPECT_EQ(gardenInfo(garden), "4.2.1.0");
+}
+
+TEST(MemLeak, MemLeak) {
+	// TODO tu gdzieś jest leak
+	//GTEST_SKIP();
+	BRANCH_CLASS* branch = new BRANCH_CLASS();
+
+    for(int i =0; i<1000; i++)
+        branch->growthBranch();
+
+    branch->fadeBranch();
+    branch->fadeBranch();
+
+    //branch->cutBranch(430);
+    //branch->cutBranch(1231321);
+
+    branch->getFruitPointer(4)->growthFruit();
+    branch->getFruitPointer(4)->growthFruit();
+    branch->getFruitPointer(6)->growthFruit();
+
+    branch->growthBranch();
+    branch->growthBranch();
+    branch->growthBranch();
+    branch->growthBranch();
+
+    //branch->harvestBranch(10);
+
+    //branch->cutBranch(52);
+
+    for(int i =0; i< 20; i++)
+    {
+        if( branch->getFruitPointer(16 + 2*i))
+            branch->getFruitPointer(16 + 2*i)->growthFruit();
+        if(branch->getFruitPointer(48 - i))
+            branch->getFruitPointer(48 - i)->pluckFruit();
+        if( branch->getFruitPointer(30 + i))
+            branch->getFruitPointer(30 + i)->growthFruit();
+        if(  branch->getFruitPointer(30 - i/2))
+            branch->getFruitPointer(30 - i/2)->fadeFruit();
+    }
+
+    for(int i =0; i< 30; i++)
+    {
+        if( branch->getFruitPointer(16 + 2*i))
+            branch->getFruitPointer(16 + 2*i)->growthFruit();
+        if( branch->getFruitPointer(30 + i))
+            branch->getFruitPointer(30 + i)->growthFruit();
+        if(  branch->getFruitPointer(30 - i))
+            branch->getFruitPointer(30 - i)->fadeFruit();
+    }
+
+    //delete branch->getFruitPointer(52);
+
+	cout << branchInfo(*branch) << endl;
+    //branch->cutBranch(0);
+	cout << branchInfo(*branch) << endl;
 }
 
 int main(int argc, char **argv) {
