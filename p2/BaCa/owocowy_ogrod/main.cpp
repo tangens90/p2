@@ -204,10 +204,8 @@ TEST(Tree, cloneBranch) {
 	//cout << tb9->getLength() << endl;
 	//cout << "tb9=" << tb9 << endl;
 	//cout << tb9->getLength() << endl;
-	cout << "drzewo " << &t << endl;
 	EXPECT_EQ(treeInfo(t), "3.5.8.0.9");
 	EXPECT_EQ(branchInfo(*tb9), "1.1.9.3");
-	//cout << "a" << endl;
 	//t.cutTree(2);
 	//EXPECT_EQ(treeInfo(t), "0.0.0.0.2");
 	//for (int i = 0; i < 7; i++) {
@@ -221,7 +219,6 @@ TEST(Tree, CopyConstructor) {
 //GTEST_SKIP();
 	Tree t;
 	t.growthTree();
-	cout << "===============" << endl;
 	Tree t1 = t;
 	EXPECT_EQ(treeInfo(t), "0.0.0.0.1");
 	EXPECT_EQ(treeInfo(t1), "0.0.0.0.1");
@@ -244,7 +241,6 @@ TEST(Tree, CopyConstructor) {
 	EXPECT_EQ(treeInfo(t4), "1.0.0.0.4");
 
 	t.growthTree();
-	cout<<endl;
 
 	Tree t5 = t;
 	EXPECT_EQ(treeInfo(t), "1.1.0.0.5");
@@ -411,8 +407,6 @@ TEST(Garden, Garden) {
 }
 
 TEST(MemLeak, MemLeak) {
-	// TODO tu gdzieś jest leak
-	//GTEST_SKIP();
 	BRANCH_CLASS* branch = new BRANCH_CLASS();
 
     for(int i =0; i<1000; i++)
@@ -421,8 +415,8 @@ TEST(MemLeak, MemLeak) {
     branch->fadeBranch();
     branch->fadeBranch();
 
-    //branch->cutBranch(430);
-    //branch->cutBranch(1231321);
+    branch->cutBranch(430);
+    branch->cutBranch(1231321);
 
     branch->getFruitPointer(4)->growthFruit();
     branch->getFruitPointer(4)->growthFruit();
@@ -433,9 +427,9 @@ TEST(MemLeak, MemLeak) {
     branch->growthBranch();
     branch->growthBranch();
 
-    //branch->harvestBranch(10);
+    branch->harvestBranch(10);
 
-    //branch->cutBranch(52);
+    branch->cutBranch(52);
 
     for(int i =0; i< 20; i++)
     {
@@ -459,16 +453,15 @@ TEST(MemLeak, MemLeak) {
             branch->getFruitPointer(30 - i)->fadeFruit();
     }
 
-    //delete branch->getFruitPointer(52);
+	EXPECT_EQ(branchInfo(*branch), "26.41.0.52");
+    branch->cutBranch(0);
+	EXPECT_EQ(branchInfo(*branch), "0.0.0.0");
 
-	cout << branchInfo(*branch) << endl;
-    //branch->cutBranch(0);
-	cout << branchInfo(*branch) << endl;
+	delete branch;
 }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest( &argc, argv );
     return RUN_ALL_TESTS();
-	//cout << "getFruitsTotal . getWeightsTotal . getHeight . setLength" << endl;
 }
 

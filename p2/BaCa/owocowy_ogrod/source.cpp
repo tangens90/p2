@@ -96,8 +96,6 @@ public:
 	void setHeight(cint);
 	void setTreePointer(Tree*);
 	void setFruitAmt(cint);
-	//void updateGlobalFruitAmt(cint, bool);
-	//void updateGlobalWeight(cint, bool);
 	void updateGlobalBranchAmt(cint, bool);
 	Branch* getNext(void) const;
 	void setNext(Branch*);
@@ -210,7 +208,6 @@ Fruit::Fruit(cint len, Branch* b) {
 	length = len;
 	branch = b;
 	next = NULL;
-	//cout << "mam dodać 1" << endl;
 	updateGlobalFruitAmt(1, true);
 }
 
@@ -233,23 +230,18 @@ cint Fruit::getWeight(void) const {
 }
 
 void Fruit::growthFruit(void) {
-	//weight++;
 	updateGlobalWeight(1, true);
 }
 
 void Fruit::fadeFruit(void) {
-	// TODO dowiedzieć się czy fadeFruit może doprowadzić do takiej sytuacji
 	// if w zasadzie sprawdza czy weight != 0
 	if (weight > 0) {
 		updateGlobalWeight(1, false);
-		//weight--;
 	}
 }
 
 void Fruit::pluckFruit(void) {
 	updateGlobalWeight(weight, false);
-	//cout << "plucking " << weight << endl;
-	//weight = 0;
 }
 
 Branch* Fruit::getBranchPointer(void) {
@@ -270,7 +262,6 @@ void Fruit::updateGlobalWeight(cint n, bool add) {
 	Branch* branch = getBranchPointer();
 		
 	if (branch == NULL) {
-		//cout << "das" << endl;
 		return;
 	}
 	if (add) branch->setWeight(branch->getWeightsTotal() + n);
@@ -282,7 +273,6 @@ void Fruit::updateGlobalWeight(cint n, bool add) {
 	if (add) tree->setWeight(tree->getWeightsTotal() + n);
 	else 	 tree->setWeight(tree->getWeightsTotal() - n);
 
-	// TODO garden
 	Garden* garden = tree->getGardenPointer();
 	if (garden == NULL)
 		return;
@@ -295,33 +285,18 @@ void Fruit::updateGlobalWeight(cint n, bool add) {
 void Fruit::updateGlobalFruitAmt(cint n, bool add) {
 	Branch* branch = getBranchPointer();
 	if (branch == NULL) {
-		//cout << "das" << endl;
 		return;
 	}
-	//cout << "dodaje " << n << endl;
-	//cout << "gałąź: " << endl;
-	//cout << "owoców " << branch->getFruitsTotal() << endl;
-	//cout << "+" << n << endl;
 	if (add) branch->setFruitAmt(branch->getFruitsTotal() + n);
 	else	 branch->setFruitAmt(branch->getFruitsTotal() - n);
-	//cout << "ostatecznie " << branch->getFruitsTotal() << endl;
-	// TODO w razie błędów warto sprawdzić czy nie wypierdala jakiejś pojebanej liczby
-	//cout << "ostatecznie owoców " << branch->getFruitsTotal() << endl;
 
 	Tree* tree = branch->getTreePointer();
-	//cout << "witam" << endl;
 	if (tree == NULL) {
-		//cout << "sad" << endl;
 		return;
 	}
-	//cout << "drzewo: " << endl;
-	//cout << "owoców " << tree->getFruitsTotal() << endl;
-	//cout << "+" << n << endl;
 	if (add) tree->setFruitAmt(tree->getFruitsTotal() + n);
 	else 	 tree->setFruitAmt(tree->getFruitsTotal() - n);
-	//cout << "ostatecznie " << tree->getFruitsTotal() << endl;
 
-	// TODO graden
 	Garden* garden = tree->getGardenPointer();
 	if (garden == NULL)
 		return;
@@ -349,7 +324,6 @@ Branch::Branch() {
 	first = NULL;
 	last = NULL;
 	next = NULL;
-	// TODO aktualizować ilość branchy
 	updateGlobalBranchAmt(1, true);
 }
 
@@ -366,12 +340,9 @@ Branch::Branch(cint h, Tree* t) {
 }
 
 Branch::Branch(const Branch& b) {
-	// TODO pamiętac, żeby przepinać odpowiednio nexta poza tym konstruktorem
-	//std::cout << "ja" << std::endl;
-	//fruitAmt = b.fruitAmt;
-	//weightAmt = b.weightAmt;
-	// TODO każdą zmianę zrobić też wyżej!!!!!
+	// TODO każdą zmianę zrobić też niżej!!!!!
 	weightAmt = 0;
+	fruitAmt = 0;
 	length = b.length;
 	height = b.height;
 	tree = b.tree;
@@ -379,18 +350,10 @@ Branch::Branch(const Branch& b) {
 	last = NULL;
 	next = b.getNext();
 	// nie musimy tutaj aktualizować ilości owoców, bo konstruktor owocu zwiększa globalnie fruitAmt
-	//updateGlobalFruitAmt(b.fruitAmt);
-	//updateGlobalWeight(b.weightAmt, true);
 	updateGlobalBranchAmt(1, true);
-	//cout << "moja gałąź ma owoców =" << b.fruitAmt << endl;
 
-	fruitAmt = b.fruitAmt;
-	if (fruitAmt > 0) {
-		// ten cyrk z fruitAmt jest potrzebny, bo fruitAmt ma zostać globalnie wypełnione przez mechanizm globalnego zwiększania wartości fruitAmt w konstruktorze Fruit
-		fruitAmt = 0;
+	if (b.fruitAmt > 0) {
 		first = new Fruit(*b.first, this);
-		//first = new Fruit(b.height, this);
-		//*first = *b.first;
 		first->setBranchPointer(this);
 		last = first;
 
@@ -399,12 +362,10 @@ Branch::Branch(const Branch& b) {
 
 		while (itB != NULL) {
 			it->setNext(new Fruit(*itB, this));
-			//it->setNext(new Fruit(b.height, this));
 
 			it = it->getNext();
 			itB = itB->getNext();
 
-			//*it = *itB;
 			it->setBranchPointer(this);
 
 			last = it;
@@ -412,18 +373,13 @@ Branch::Branch(const Branch& b) {
 
 		last->setNext(NULL);
 	}
-	//cout << "wzór: " << b.fruitAmt << endl;
-	//cout << "ja: " << fruitAmt << endl;
 }
 
 
 Branch::Branch(const Branch& b, Tree* parent) {
-	// TODO pamiętac, żeby przepinać odpowiednio nexta poza tym konstruktorem
-	//std::cout << "ja" << std::endl;
-	//fruitAmt = b.fruitAmt;
-	//weightAmt = b.weightAmt;
 	// TODO każdą zmianę zrobić też wyżej!!!!!
 	weightAmt = 0;
+	fruitAmt = 0;
 	length = b.length;
 	height = b.height;
 	tree = parent;
@@ -431,19 +387,12 @@ Branch::Branch(const Branch& b, Tree* parent) {
 	last = NULL;
 	next = b.getNext();
 	// nie musimy tutaj aktualizować ilości owoców, bo konstruktor owocu zwiększa globalnie fruitAmt
-	//updateGlobalFruitAmt(b.fruitAmt);
-	//updateGlobalWeight(b.weightAmt, true);
-	//cout << "aktualizuje ilość gałęzi dla " << parent << endl;
 	updateGlobalBranchAmt(1, true);
-	//cout << "moja gałąź ma owoców =" << b.fruitAmt << endl;
 
-	fruitAmt = b.fruitAmt;
-	if (fruitAmt > 0) {
+	if (b.fruitAmt > 0) {
 		// ten cyrk z fruitAmt jest potrzebny, bo fruitAmt ma zostać globalnie wypełnione przez mechanizm globalnego zwiększania wartości fruitAmt w konstruktorze Fruit
 		fruitAmt = 0;
 		first = new Fruit(*b.first, this);
-		//first = new Fruit(b.height, this);
-		//*first = *b.first;
 		first->setBranchPointer(this);
 		last = first;
 
@@ -452,12 +401,10 @@ Branch::Branch(const Branch& b, Tree* parent) {
 
 		while (itB != NULL) {
 			it->setNext(new Fruit(*itB, this));
-			//it->setNext(new Fruit(b.height, this));
 
 			it = it->getNext();
 			itB = itB->getNext();
 
-			//*it = *itB;
 			it->setBranchPointer(this);
 
 			last = it;
@@ -465,8 +412,6 @@ Branch::Branch(const Branch& b, Tree* parent) {
 
 		last->setNext(NULL);
 	}
-	//cout << "wzór: " << b.fruitAmt << endl;
-	//cout << "ja: " << fruitAmt << endl;
 }
 
 Branch::~Branch() {
@@ -627,29 +572,6 @@ void Branch::setWeight(cint n) {
 	weightAmt = n;
 }
 
-//void Branch::updateGlobalWeight(cint n, bool add) {
-//	if (add) weightAmt += n;
-//	else	 weightAmt -= n;
-//	Tree* tree = getTreePointer();
-//	if (tree == NULL)
-//		return;
-//	if (add) tree->setWeight(tree->getWeightsTotal() + n);
-//	else	 tree->setWeight(tree->getWeightsTotal() - n);
-//	// TODO garden
-//}
-//
-//void Branch::updateGlobalFruitAmt(cint n, bool add) {
-//	cout << "wywołuję się " << add << endl;
-//	if (add) fruitAmt += n;
-//	else 	 fruitAmt -= n;
-//	Tree* tree = getTreePointer();
-//	if (tree == NULL)
-//		return;
-//	if (add) tree->setFruitAmt(tree->getFruitsTotal() + n);
-//	else	 tree->setFruitAmt(tree->getFruitsTotal() - n);
-//	// TODO garden
-//}
-
 void Branch::updateGlobalBranchAmt(cint n, bool add) {
 	Tree* tree = getTreePointer();
 	if (tree == NULL)
@@ -709,7 +631,6 @@ Tree::Tree(cint id, Garden* g) {
 }
 
 Tree::Tree(const Tree& t) {
-	//cout << "teraz odpalam się" << endl;
 	// TODO każda zmiana również niżej!!!!
 	id = t.id;
 	height = t.height;
@@ -745,14 +666,10 @@ Tree::Tree(const Tree& t) {
 }
 
 Tree::Tree(const Tree& t, Garden* g) {
-	//cout << "odpalam się" << endl;
 	// TODO każda zmiana również wyżej!!!!
 	id = t.id;
 	height = t.height;
-	//fruitAmt = t.fruitAmt;
 	fruitAmt = 0;
-	// TODO tu będzie problem z ilością branchy
-	//weight = t.weight;
 	weight = 0;
 	garden = g;
 	first = NULL;
@@ -760,48 +677,27 @@ Tree::Tree(const Tree& t, Garden* g) {
 	next = t.getNext();
 	prev = t.getPrev();
 	updateGlobalTreesAmt(1, true);
-	//updateGlobalBranchesAmt(
-	//next = t.getNext();
 
 	branchAmt = t.branchAmt;
 	if (branchAmt > 0) {
 		branchAmt = 0;
 		first = new Branch(*t.first, this);
-		// TODO może też weight
-		//cout << "owoców po first: " <<  this->getFruitsTotal() << endl;
-		//cout << first->getFruitsTotal() << endl;
-		//*first = *t.first;
-		//first->setTreePointer(this);
 		last = first;
 
 		Branch* it = first;
 		Branch* itB = t.first->getNext();
 	
 		while (itB != NULL) {
-			//cout << itB << endl;
 			it->setNext(new Branch(*itB, this));
-			//cout << "owoców po iteracji: " <<  this->getFruitsTotal() << endl;
-			//cout << it->getFruitsTotal() << endl;
-			//it->setNext(new Branch(height, this));
 
 			it = it->getNext();
 			itB = itB->getNext();
-
-			//*it = Branch(*itB);
-			//*it = *itB;
-			//it->setTreePointer(this);
 
 			last = it;
 		}
 
 		last->setNext(NULL);
 	}
-	//cout << "owoców ostatecznie: " <<  this->getFruitsTotal() << endl;
-
-	// TODO aktualizować ilosć owoców itd
-	// nie trzeba, bo Branch już wszystko aktualizuje
-	// chyba tylko branchAmt trzeba będzie poprawiać
-	// i to najlepiej w konstruktorze Branch
 }
 
 Tree::~Tree() {
@@ -810,7 +706,6 @@ Tree::~Tree() {
 	while (it != NULL) {
 		tmp = it;
 		it = it->getNext();
-		// TODO aktualizować fruitAmt itd
 		delete tmp;
 	}
 	updateGlobalTreesAmt(1, false);
@@ -865,7 +760,6 @@ cint Tree::getBranchesTotal(void) const {
 }
 
 cint Tree::getFruitsTotal(void) const {
-	//cout << "qweqwqew" << fruitAmt << endl;
 	return fruitAmt;
 }
 
@@ -897,11 +791,6 @@ void Tree::growthTree(void) {
 			last = first = b;
 		}
 		last->setNext(NULL);
-		//branchAmt++;
-		// TODO to wyżej w konstruktorze
-		// TODO
-		// raczej branch
-		//updateGlobalFruitAmt(getTreePointer()->getFruitsTotal() + 1);
 	}
 }
 
@@ -927,8 +816,6 @@ void Tree::fadeTree(void) {
 
 		Branch* tmp;
 		while (it != NULL) {
-			// TODO informacja gdzieś dalej
-			//branchAmt--;
 			tmp = it;
 			it = it->getNext();
 			delete tmp;
@@ -970,12 +857,8 @@ void Tree::cutTree(cint h) {
 
 		Branch* tmp;
 		while (it != NULL) {
-			// TODO przekazać gdzieś wyżej
-			//branchAmt--;
 			tmp = it;
 			it = it->getNext();
-			// TODO brak aktualizacji fruitAmt i weight
-			// poprawić w destruktorze
 			delete tmp;
 		}
 		if (last != NULL) {
@@ -988,11 +871,6 @@ void Tree::cloneBranch(Branch* b) {
 	if (b == NULL || branchAmt == 0) 
 		return;
 	
-	//cout << "serio klonowanie" << endl;
-	
-	// TODO pamiętać o przepianiu lasta
-	// TODO testować na wstawiwanei na początku, w środku i na końcu
-	// TODO co robić jeśli nie ma gałęzi o długości 0?
 	Branch* it = first;
 	Branch* true_prev = NULL;
 	while (it != NULL) {
@@ -1005,27 +883,14 @@ void Tree::cloneBranch(Branch* b) {
 	if (it != NULL) {
 		cint h = it->getHeight();
 		Branch* true_next = it->getNext();
-		bool wasLast = false;
-		if (last == it) {
-			wasLast = true;
-		}
 		delete it;
 		it = new Branch(*b, this);
 		if (true_prev != NULL) {
 			true_prev->setNext(it);
 		}
-		//cout << endl;
 		it->setHeight(h);
 		it->setTreePointer(this);
 		it->setNext(true_next);
-		if (wasLast) {
-			//last = it;
-		}
-		//cout << b->getFruitsTotal() << endl;
-		//cout << it->getFruitsTotal() << endl;
-		//cout << "qqq" << b->getLength() << endl;
-		//cout << "qqq" << it->getLength() << endl;
-		//cout << it << endl;
 	}
 }
 
@@ -1154,7 +1019,6 @@ void Garden::plantTree(void) {
 			}
 		}
 	}
-	//treesAmt++;
 }
 
 void Garden::growthGarden(void) {
@@ -1240,14 +1104,9 @@ Tree* Garden::getTreePointer(cint n) {
 	if (n == last->getNumber()) {
 		return last;
 	}
-	// n < last->getNumber()
 	for (Tree* it = first; it != NULL; it = it->getNext()) {
 		if (it->getNumber() == n) {
 			return it;
-		}
-		else if (it->getNumber() > n) {
-			// raczej bez sensu, ale niech będzie
-			return NULL;
 		}
 	}
 	return NULL;
